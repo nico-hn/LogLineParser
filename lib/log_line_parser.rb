@@ -21,6 +21,8 @@ module LogLineParser
         tokens
       end
 
+      private
+
       def scan_token
         @scanner.scan(@special_token_re) ||
           @scanner.scan_until(@non_special_token_re)
@@ -44,6 +46,6 @@ module LogLineParser
     @scanner = StringScanner.new("")
 
 
-    @special_token_re, @non_special_token_re = self.compose_re(@special_tokens)
+    @special_token_re, @non_special_token_re = compose_re(@special_tokens)
   end
 end
