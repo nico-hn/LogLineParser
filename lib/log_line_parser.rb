@@ -12,13 +12,9 @@ module LogLineParser
       def tokenize(str)
         @scanner.string = str
         tokens = []
-        not_last_token = true
-        while not_last_token
-          if token = scan_token
-            tokens.push token
-          else
-            not_last_token = false
-          end
+        token = true # to start looping, you should assign a truthy value
+        while token
+          tokens.push token if token = scan_token
         end
 
         tokens.push @scanner.rest unless @scanner.eos?
