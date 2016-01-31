@@ -14,9 +14,7 @@ module LogLineParser
         tokens = []
         not_last_token = true
         while not_last_token
-          if token = @scanner.scan(@special_token_re)
-            tokens.push token
-          elsif token = @scanner.scan_until(@non_special_token_re)
+          if token = scan_token
             tokens.push token
           else
             not_last_token = false
@@ -25,6 +23,11 @@ module LogLineParser
 
         tokens.push @scanner.rest unless @scanner.eos?
         tokens
+      end
+
+      def scan_token
+        @scanner.scan(@special_token_re) ||
+          @scanner.scan_until(@non_special_token_re)
       end
 
       def compose_special_tokens_str(special_tokens)
