@@ -6,12 +6,17 @@ class TestLogLineParser < Minitest::Test
   end
 
   def test_tokenize_tokenize
-    str = "192.168.0.1 - - [time ]"
-    tokens = LogLineParser::Tokenizer.tokenize(str)
-    assert_equal(str, tokens)
-  end
-
-  def test_it_does_something_useful
-    assert false
+    [[
+        "192.168.0.1 - - [time ]",
+        ["192.168.0.1", " ", "-", " ", "-", " ", "[", "time", " ", "]"]
+      ],
+      [
+        "192.168.0.1 - - [time ]  123",
+        ["192.168.0.1", " ", "-", " ", "-", " ", "[", "time", " ", "]", "  ", "123"]
+      ]
+    ].each do |str, expected|
+      tokens = LogLineParser::Tokenizer.tokenize(str)
+      assert_equal(expected, tokens)
+    end
   end
 end
