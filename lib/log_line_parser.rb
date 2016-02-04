@@ -36,7 +36,7 @@ module LogLineParser
       end
 
       def compose_special_tokens_str(special_tokens)
-        sorted = special_tokens.sort {|x, y| x.length <=> y.length }
+        sorted = special_tokens.sort {|x, y| y.length <=> x.length }
         escaped = sorted.map {|token| Regexp.escape(token) }
         escaped.concat @unescaped_special_tokens if @unescaped_special_tokens
         escaped.join('|')
