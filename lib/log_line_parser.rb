@@ -50,4 +50,31 @@ module LogLineParser
 
     setup(%w([ ] - \\ "), ['\s+']) #"
   end
+
+  class NodeStack
+    attr_reader :current_node
+
+    def initialize
+      @stack = []
+    end
+
+    def push(node)
+      @current_node = node
+      @stack.push node
+    end
+
+    def pop
+      popped = @stack.pop
+      @current_node = @stack[-1]
+      popped
+    end
+
+    def push_token(token)
+      @current_node.push token
+    end
+
+    def root
+      @stack[0]
+    end
+  end
 end
