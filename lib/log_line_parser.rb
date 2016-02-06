@@ -77,4 +77,51 @@ module LogLineParser
       @stack[0]
     end
   end
+
+  class Node
+    @start_tag_to_subnode = {}
+    @tokens_to_be_ignored = []
+
+    class << self
+      attr_reader :start_tag, :end_tag, :subnode_classes
+
+      def register_subnode_classes(*subnode_classes)
+        @subnode_classes = subnode_classes
+        subnode_classes.each do |subnode|
+          @start_tag_to_subnode[subnode.start_tag] = subnode
+        end
+      end
+
+      def setup(start_tag, end_tag, to_be_ignored=[], *subnode_classes)
+        @start_tag = start_tag
+        @end_tag = end_tag
+        @tokens_to_be_ignored.concat(to_be_ignored) if to_be_ignored
+        register_subnode_classes(*subnode_classes)
+      end
+    end
+
+    def initialize
+      @subnodes = []
+    end
+
+    def to_s
+      @subnodes.join
+    end
+
+    def subnode_class(token)
+      self.class.start_tag_to_subnode[token]
+    end
+
+    def end_tag?(token)
+      self.class.end_tag == token
+    end
+
+    def can_ignore?(token)
+      @tokens_to_be_ignored.include?(token)
+    end
+
+    def push(token)
+      @subnodes.push token
+    end
+  end
 end
