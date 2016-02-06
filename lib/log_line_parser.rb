@@ -73,6 +73,18 @@ module LogLineParser
       @current_node.push token
     end
 
+    def push(token)
+      if @current_node.end_tag?(token)
+        pop
+      elsif subnode_class = @current_node.subnode_class(token)
+        push_node(subnode_class.new)
+      elsif @current_node.can_ignore?(token)
+        nil
+      else
+        push_token(token)
+      end
+    end
+
     def root
       @stack[0]
     end
