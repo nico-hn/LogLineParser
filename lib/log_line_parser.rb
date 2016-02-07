@@ -59,6 +59,7 @@ module LogLineParser
     end
 
     def push_node(node)
+      @current_node.push node
       @current_node = node
       @stack.push node
     end
