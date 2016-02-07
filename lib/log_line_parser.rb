@@ -148,4 +148,18 @@ module LogLineParser
       @subnodes.push token
     end
   end
+
+  class RootNode < Node; end
+  class TimeNode < Node; end
+  class StringNode < Node; end
+  class StringEscapeNode < Node; end
+
+  StringEscapeNode.setup('\\', nil, [])
+  StringNode.setup('"', '"', [], StringEscapeNode)
+  TimeNode.setup("[", "]", [])
+  RootNode.setup(nil, nil, [" "], TimeNode, StringNode)
+
+  class LogLineNodeStack < NodeStack
+    setup(RootNode)
+  end
 end
