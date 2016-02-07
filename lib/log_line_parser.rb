@@ -221,5 +221,9 @@ module LogLineParser
 
   class LogLineNodeStack < NodeStack
     setup(RootNode)
+
+    def to_a
+      root.subnodes.map {|node| node.to_s }
+    end
   end
 end
