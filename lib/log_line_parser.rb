@@ -112,13 +112,12 @@ module LogLineParser
         end
       end
 
-      def setup(start_tag, end_tag, to_be_ignored=[], *subnode_classes)
+      def setup(start_tag, end_tag, to_be_ignored=[])
         @start_tag_to_subnode = {}
         @tokens_to_be_ignored = []
         @start_tag = start_tag
         @end_tag = end_tag
         @tokens_to_be_ignored.concat(to_be_ignored) if to_be_ignored
-        register_subnode_classes(*subnode_classes)
       end
     end
 
@@ -149,15 +148,24 @@ module LogLineParser
     end
   end
 
-  class RootNode < Node; end
-  class TimeNode < Node; end
-  class StringNode < Node; end
-  class StringEscapeNode < Node; end
+  class RootNode < Node
+    setup(nil, nil, [" "])
+  end
 
-  StringEscapeNode.setup('\\', nil, [])
-  StringNode.setup('"', '"', [], StringEscapeNode)
-  TimeNode.setup("[", "]", [])
-  RootNode.setup(nil, nil, [" "], TimeNode, StringNode)
+  class TimeNode < Node
+    setup("[", "]", [])
+  end
+
+  class StringNode < Node
+    setup('"', '"', [])
+  end
+
+  class StringEscapeNode < Node
+    setup('\\', nil, [])
+  end
+
+  RootNode.register_subnode_classes(TimeNode, StringNode)
+  StringNode.register_subnode_classes(StringEscapeNode)
 
   class LogLineNodeStack < NodeStack
     setup(RootNode)
