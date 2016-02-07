@@ -182,7 +182,7 @@ module LogLineParser
   end
 
   class StringEscapeNode < EscapeNode
-    setup('\\', nil, [], ['\\', 't', 'n', 'r'])
+    setup('\\', nil, [], ['\\', '"', 't', 'n', 'r'])
   end
 
   RootNode.register_subnode_classes(TimeNode, StringNode)

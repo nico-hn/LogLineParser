@@ -36,7 +36,7 @@ class TestLogLineParser < Minitest::Test
 
   def test_escape_node_to_be_escaped_re
     re = LogLineParser::StringEscapeNode.to_be_escaped_re
-    assert_equal(/\A(?:\\|t|n|r)/, re)
+    assert_equal(/\A(?:\\|"|t|n|r)/, re)
   end
 
   def test_escape_node_remove_escaped_part
