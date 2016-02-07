@@ -226,4 +226,11 @@ module LogLineParser
       root.subnodes.map {|node| node.to_s }
     end
   end
+
+  def self.parse(line)
+    stack = LogLineNodeStack.new
+    tokens = Tokenizer.tokenize(line)
+    tokens.each {|token| stack.push token }
+    stack
+  end
 end
