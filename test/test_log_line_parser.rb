@@ -48,4 +48,12 @@ class TestLogLineParser < Minitest::Test
     assert_equal(string_with_a_double_quote,
                  escape_node.remove_escaped_part('"' + string_with_a_double_quote))
   end
+
+  def test_escape_node_part_to_be_escaped
+    escape_node = LogLineParser::StringEscapeNode.new
+    double_quote = '"a string that begins with a double quote'
+    should_not_be_escaped = "a string"
+    assert_equal('"', escape_node.part_to_be_escaped(double_quote))
+    assert_equal(nil, escape_node.part_to_be_escaped(should_not_be_escaped))
+  end
 end
