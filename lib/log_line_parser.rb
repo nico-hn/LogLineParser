@@ -91,11 +91,9 @@ module LogLineParser
   end
 
   class Node
-    @start_tag_to_subnode = {}
-    @tokens_to_be_ignored = []
-
     class << self
       attr_reader :start_tag, :end_tag, :subnode_classes
+      attr_reader :start_tag_to_subnode, :tokens_to_be_ignored
 
       def register_subnode_classes(*subnode_classes)
         @subnode_classes = subnode_classes
@@ -105,6 +103,8 @@ module LogLineParser
       end
 
       def setup(start_tag, end_tag, to_be_ignored=[], *subnode_classes)
+        @start_tag_to_subnode = {}
+        @tokens_to_be_ignored = []
         @start_tag = start_tag
         @end_tag = end_tag
         @tokens_to_be_ignored.concat(to_be_ignored) if to_be_ignored
