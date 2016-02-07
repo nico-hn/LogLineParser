@@ -54,8 +54,17 @@ module LogLineParser
   class NodeStack
     attr_reader :current_node
 
+    class << self
+      attr_reader :root_node_class
+
+      def setup(root_node_class)
+        @root_node_class = root_node_class
+      end
+    end
+
     def initialize
-      @stack = []
+      @current_node = self.class.root_node_class.new
+      @stack = [@current_node]
     end
 
     def push_node(node)
