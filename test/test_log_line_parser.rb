@@ -19,4 +19,18 @@ class TestLogLineParser < Minitest::Test
       assert_equal(expected, tokens)
     end
   end
+
+  def test_log_line_node_stack
+    line = '192.168.3.4 - - [time string] - "string value" -'
+    stack = LogLineParser::LogLineNodeStack.new
+    tokens = LogLineParser::Tokenizer.tokenize(line)
+    expected = ["192.168.3.4", "-", "-", "time string", "-", "string value", "-"]
+
+    tokens.each do |token|
+      stack.push token
+    end
+
+    result = stack.root.subnodes.map {|val| val.to_s }
+    assert_equal(expected, result)
+  end
 end
