@@ -73,8 +73,8 @@ class TestLogLineParser < Minitest::Test
 
   def test_log_line_node_stack_to_a
     line = '192.168.3.4 - - [time string] - "string \\tvalue" -'
-    expected = ["192.168.3.4", "-", "-", "time string", "-", "string value", "-"]
+    expected = ["192.168.3.4", "-", "-", "time string", "-", "string \tvalue", "-"]
     result = LogLineParser.parse(line).to_a
-    assert_equal("", result)
+    assert_equal(expected, result)
   end
 end
