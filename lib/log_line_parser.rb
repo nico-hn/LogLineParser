@@ -163,6 +163,10 @@ module LogLineParser
         /\A(?:#{re_str})/
       end
     end
+
+    def remove_escaped_part(token)
+      token.sub(self.class.to_be_escaped_re, ''.freeze)
+    end
   end
 
   class RootNode < Node
