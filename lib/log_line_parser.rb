@@ -167,6 +167,13 @@ module LogLineParser
     def remove_escaped_part(token)
       token.sub(self.class.to_be_escaped_re, ''.freeze)
     end
+
+    def part_to_be_escaped(token)
+      self.class.to_be_escaped.each do |e|
+        return e if token.start_with?(e)
+      end
+      nil
+    end
   end
 
   class RootNode < Node
