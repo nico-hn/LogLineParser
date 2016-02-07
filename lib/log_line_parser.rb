@@ -122,6 +122,8 @@ module LogLineParser
       end
     end
 
+    attr_reader :subnodes
+
     def initialize
       @subnodes = []
     end
