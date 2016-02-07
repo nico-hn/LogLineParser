@@ -33,4 +33,9 @@ class TestLogLineParser < Minitest::Test
     result = stack.root.subnodes.map {|val| val.to_s }
     assert_equal(expected, result)
   end
+
+  def test_escape_node_to_be_escaped_re
+    re = LogLineParser::StringEscapeNode.to_be_escaped_re
+    assert_equal(/\A(?:\\|t|n|r)/, re)
+  end
 end
