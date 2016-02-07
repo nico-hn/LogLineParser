@@ -225,7 +225,26 @@ module LogLineParser
     def to_a
       root.subnodes.map {|node| node.to_s }
     end
+
+    def to_record
+      record = CombinedLogRecord.new(*to_a)
+      record.last_request_status = record.last_request_status.to_i
+      record.size_of_response = record.size_of_response.to_i
+      record
+    end
   end
+
+  # LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
+
+  CombinedLogRecord = Struct.new(:remote_host,
+                                 :remote_logname,
+                                 :remote_user,
+                                 :time,
+                                 :first_line_of_request,
+                                 :last_request_status,
+                                 :size_of_response,
+                                 :referer,
+                                 :user_agent)
 
   def self.parse(line)
     stack = LogLineNodeStack.new

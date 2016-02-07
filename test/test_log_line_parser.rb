@@ -81,4 +81,12 @@ class TestLogLineParser < Minitest::Test
     result = LogLineParser.parse(line).to_a
     assert_equal(expected, result)
   end
+
+  def test_combined_log_record
+    record = LogLineParser.parse(@log_line).to_record
+    expected_user_agent = 'Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0'
+    expected_last_request_status = 200
+    assert_equal(expected_user_agent, record.user_agent)
+    assert_equal(expected_last_request_status, record.last_request_status)
+  end
 end
