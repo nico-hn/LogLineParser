@@ -70,4 +70,11 @@ class TestLogLineParser < Minitest::Test
     assert_equal('"', escape_node.part_to_be_escaped(double_quote))
     assert_equal(nil, escape_node.part_to_be_escaped(should_not_be_escaped))
   end
+
+  def test_log_line_node_stack_to_a
+    line = '192.168.3.4 - - [time string] - "string \\tvalue" -'
+    expected = ["192.168.3.4", "-", "-", "time string", "-", "string value", "-"]
+    result = LogLineParser.parse(line).to_a
+    assert_equal("", result)
+  end
 end
