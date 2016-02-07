@@ -84,7 +84,9 @@ module LogLineParser
     end
 
     def push(token)
-      if @current_node.end_tag?(token)
+      if @current_node.kind_of? EscapeNode
+        push_escaped_token(token)
+      elsif @current_node.end_tag?(token)
         pop
       elsif subnode_class = @current_node.subnode_class(token)
         push_node(subnode_class.new)
@@ -93,6 +95,17 @@ module LogLineParser
       else
         push_token(token)
       end
+    end
+
+    def push_escaped_token(token)
+      part_to_be_escaped = @current_node.part_to_be_escaped(token)
+      remaining_part = nil
+      if part_to_be_escaped
+        remaining_part = @current_node.remove_escaped_part(token)
+        push_token(part_to_be_escaped)
+      end
+      pop
+      push_token(remaining_part) if remaining_part
     end
 
     def root

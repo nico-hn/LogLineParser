@@ -34,6 +34,20 @@ class TestLogLineParser < Minitest::Test
     assert_equal(expected, result)
   end
 
+  def test_escape_in_string_node
+    line = '192.168.3.4 - - [time string] - "string \\tvalue" -'
+    stack = LogLineParser::LogLineNodeStack.new
+    tokens = LogLineParser::Tokenizer.tokenize(line)
+    expected = ["192.168.3.4", "-", "-", "time string", "-", "string \tvalue", "-"]
+
+    tokens.each do |token|
+      stack.push token
+    end
+
+    result = stack.root.subnodes.map {|val| val.to_s }
+    assert_equal(expected, result)
+  end
+
   def test_escape_node_to_be_escaped_re
     re = LogLineParser::StringEscapeNode.to_be_escaped_re
     assert_equal(/\A(?:\\|"|t|n|r)/, re)
