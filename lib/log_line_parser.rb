@@ -148,6 +148,23 @@ module LogLineParser
     end
   end
 
+  class EscapeNode < Node
+    class << self
+      attr_reader :to_be_escaped, :to_be_escaped_re
+
+      def setup(start_tag, end_tag, to_be_ignored=[], to_be_escaped=[])
+        super(start_tag, end_tag, to_be_ignored)
+        @to_be_escaped = to_be_escaped
+        @to_be_escaped_re = compile_to_be_escaped_re(to_be_escaped)
+      end
+
+      def compile_to_be_escaped_re(to_be_escaped)
+        re_str = to_be_escaped.map {|e| Regexp.escape(e) }.join("|")
+        /\A(?:#{re_str})/
+      end
+    end
+  end
+
   class RootNode < Node
     setup(nil, nil, [" "])
   end
@@ -160,8 +177,8 @@ module LogLineParser
     setup('"', '"', [])
   end
 
-  class StringEscapeNode < Node
-    setup('\\', nil, [])
+  class StringEscapeNode < EscapeNode
+    setup('\\', nil, [], ['\\', 't', 'n', 'r'])
   end
 
   RootNode.register_subnode_classes(TimeNode, StringNode)
