@@ -190,6 +190,17 @@ module LogLineParser
 
   class StringEscapeNode < EscapeNode
     setup('\\', nil, [], ['\\', '"', 't', 'n', 'r'])
+    ESCAPED = {
+      '\\' => '\\',
+      '"' => '"',
+      't' => "\t",
+      'n' => "\n",
+      'r' => "\r",
+    }
+
+    def to_s
+      ESCAPED[@subnodes[0]] || ''.freeze
+    end
   end
 
   RootNode.register_subnode_classes(TimeNode, StringNode)
