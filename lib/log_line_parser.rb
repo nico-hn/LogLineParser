@@ -129,7 +129,7 @@ module LogLineParser
     end
 
     def can_ignore?(token)
-      @tokens_to_be_ignored.include?(token)
+      self.class.tokens_to_be_ignored.include?(token)
     end
 
     def push(token)
