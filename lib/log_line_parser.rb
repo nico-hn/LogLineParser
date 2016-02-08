@@ -6,7 +6,6 @@ require "time"
 
 module LogLineParser
   class Tokenizer
-
     class << self
       attr_reader :special_token_re, :non_special_token_re
 
@@ -273,7 +272,6 @@ module LogLineParser
       def parse_time(time_str)
         Time.parse(time_str.sub(DATE_TIME_SEP, " ".freeze))
       end
-
     end
 
     def parse_request
