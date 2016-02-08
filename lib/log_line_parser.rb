@@ -248,11 +248,17 @@ module LogLineParser
       def create(log_fields)
         new(*log_fields).tap do |rec|
           rec.last_request_status = rec.last_request_status.to_i
-          size_str = rec.size_of_response
-          response_size = size_str == "-".freeze ? 0 : size_str.to_i
-          rec.size_of_response = response_size
+          rec.size_of_response = response_size(rec)
         end
       end
+
+      private
+
+      def response_size(rec)
+        size_str = rec.size_of_response
+        size_str == "-".freeze ? 0 : size_str.to_i
+      end
+
     end
   end
 
