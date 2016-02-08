@@ -90,5 +90,6 @@ class TestLogLineParser < Minitest::Test
     assert_equal(expected_user_agent, record.user_agent)
     assert_equal(expected_last_request_status, record.last_request_status)
     assert_equal(expected_time, record.time.to_s)
+    assert_equal("GET", record.method)
   end
 end

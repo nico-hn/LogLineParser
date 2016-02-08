@@ -246,6 +246,9 @@ module LogLineParser
 
   class CombinedLogRecord
     DATE_TIME_SEP = /:/
+    SPACE_RE = / /
+
+    attr_reader :method, :protocol, :resource
 
     class << self
       def create(log_fields)
@@ -253,6 +256,7 @@ module LogLineParser
           rec.last_request_status = rec.last_request_status.to_i
           rec.size_of_response = response_size(rec)
           rec.time = parse_time(rec.time)
+          rec.parse_request
         end
       end
 
@@ -266,6 +270,14 @@ module LogLineParser
       def parse_time(time_str)
         Time.parse(time_str.sub(DATE_TIME_SEP, " ".freeze))
       end
+
+    end
+
+    def parse_request
+      request = self.first_line_of_request.split(SPACE_RE)
+      @method = request.shift
+      @protocol = request.pop
+      @resource = request.size == 1 ? request[0] : request.join(" ".freeze)
     end
   end
 
