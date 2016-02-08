@@ -86,7 +86,9 @@ class TestLogLineParser < Minitest::Test
     record = LogLineParser.parse(@log_line).to_record
     expected_user_agent = 'Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0'
     expected_last_request_status = 200
+    expected_time = "2016-02-07 07:39:42 +0900"
     assert_equal(expected_user_agent, record.user_agent)
     assert_equal(expected_last_request_status, record.last_request_status)
+    assert_equal(expected_time, record.time.to_s)
   end
 end

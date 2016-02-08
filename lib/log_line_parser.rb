@@ -2,6 +2,7 @@
 
 require "log_line_parser/version"
 require "strscan"
+require "time"
 
 module LogLineParser
   class Tokenizer
@@ -244,11 +245,14 @@ module LogLineParser
                                  :user_agent)
 
   class CombinedLogRecord
+    DATE_TIME_SEP = /:/
+
     class << self
       def create(log_fields)
         new(*log_fields).tap do |rec|
           rec.last_request_status = rec.last_request_status.to_i
           rec.size_of_response = response_size(rec)
+          rec.time = parse_time(rec.time)
         end
       end
 
@@ -259,6 +263,9 @@ module LogLineParser
         size_str == "-".freeze ? 0 : size_str.to_i
       end
 
+      def parse_time(time_str)
+        Time.parse(time_str.sub(DATE_TIME_SEP, " ".freeze))
+      end
     end
   end
 
