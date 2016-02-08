@@ -247,8 +247,10 @@ module LogLineParser
   class CombinedLogRecord
     DATE_TIME_SEP = /:/
     SPACE_RE = / /
+    SLASH_RE = /\//
+    SLASH = '/'
 
-    attr_reader :method, :protocol, :resource
+    attr_reader :method, :protocol, :resource, :referer_url, :referer_resource
 
     class << self
       def create(log_fields)
@@ -257,6 +259,7 @@ module LogLineParser
           rec.size_of_response = response_size(rec)
           rec.time = parse_time(rec.time)
           rec.parse_request
+          rec.parse_referer
         end
       end
 
@@ -278,6 +281,17 @@ module LogLineParser
       @method = request.shift
       @protocol = request.pop
       @resource = request.size == 1 ? request[0] : request.join(" ".freeze)
+    end
+
+    def parse_referer
+      return if self.referer == "-"
+      parts = self.referer.split(SLASH_RE, 4)
+      if parts[0] == "http:".freeze
+        @referer_url = parts.shift(3).join(SLASH).concat(SLASH)
+        @referer_resource = SLASH + parts.shift unless parts.empty?
+      else
+        @referer_resource = self.referer
+      end
     end
   end
 
