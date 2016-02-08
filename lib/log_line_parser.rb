@@ -3,6 +3,7 @@
 require "log_line_parser/version"
 require "strscan"
 require "time"
+require "date"
 
 module LogLineParser
   class Tokenizer
@@ -272,6 +273,10 @@ module LogLineParser
       def parse_time(time_str)
         Time.parse(time_str.sub(DATE_TIME_SEP, " ".freeze))
       end
+    end
+
+    def date(offset=0)
+      DateTime.parse((self.time + offset * 32400).to_s)
     end
 
     def parse_request

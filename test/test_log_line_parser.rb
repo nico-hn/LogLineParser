@@ -94,4 +94,9 @@ class TestLogLineParser < Minitest::Test
     assert_equal("http://www.example.org/", record.referer_url)
     assert_equal("/start.html", record.referer_resource)
   end
+
+  def test_combined_log_record_date
+    record = LogLineParser.parse(@log_line).to_record
+    assert_equal("20160207", record.date.strftime("%Y%m%d"))
+  end
 end
