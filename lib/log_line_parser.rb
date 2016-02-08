@@ -276,7 +276,7 @@ module LogLineParser
     end
 
     def date(offset=0)
-      DateTime.parse((self.time + offset * 32400).to_s)
+      DateTime.parse((self.time + offset * 86400).to_s)
     end
 
     def parse_request
