@@ -227,10 +227,7 @@ module LogLineParser
     end
 
     def to_record
-      record = CombinedLogRecord.new(*to_a)
-      record.last_request_status = record.last_request_status.to_i
-      record.size_of_response = record.size_of_response.to_i
-      record
+      CombinedLogRecord.create(to_a)
     end
   end
 
@@ -245,6 +242,19 @@ module LogLineParser
                                  :size_of_response,
                                  :referer,
                                  :user_agent)
+
+  class CombinedLogRecord
+    class << self
+      def create(log_fields)
+        new(*log_fields).tap do |rec|
+          rec.last_request_status = rec.last_request_status.to_i
+          size_str = rec.size_of_response
+          response_size = size_str == "-".freeze ? 0 : size_str.to_i
+          rec.size_of_response = response_size
+        end
+      end
+    end
+  end
 
   def self.parse(line)
     stack = LogLineNodeStack.new
