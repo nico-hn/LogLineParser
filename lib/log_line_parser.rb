@@ -249,6 +249,7 @@ module LogLineParser
     SPACE_RE = / /
     SLASH_RE = /\//
     SLASH = '/'
+    SCHEMES =%w(http: https:)
 
     attr_reader :method, :protocol, :resource, :referer_url, :referer_resource
 
@@ -289,7 +290,7 @@ module LogLineParser
     def parse_referer
       return if self.referer == "-"
       parts = self.referer.split(SLASH_RE, 4)
-      if parts[0] == "http:".freeze
+      if SCHEMES.include? parts[0]
         @referer_url = parts.shift(3).join(SLASH).concat(SLASH)
         @referer_resource = SLASH + parts.shift unless parts.empty?
       else
