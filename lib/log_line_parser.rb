@@ -300,7 +300,7 @@ module LogLineParser
 
   def self.parse(line)
     stack = LogLineNodeStack.new
-    tokens = Tokenizer.tokenize(line)
+    tokens = Tokenizer.tokenize(line.chomp)
     tokens.each {|token| stack.push token }
     stack
   end
