@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 
 module LineParser
-    class Tokenizer
-
+  class Tokenizer
     class << self
       attr_reader :special_token_re, :non_special_token_re
 
