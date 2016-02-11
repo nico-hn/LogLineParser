@@ -133,6 +133,7 @@ module LineParser
     def initialize
       @subnodes = []
       @self_class = self.class
+      @cannot_ignore = @self_class.tokens_to_be_ignored.empty?
     end
 
     def accept(visitor, memo=nil)
@@ -152,7 +153,11 @@ module LineParser
     end
 
     def can_ignore?(token)
-      @self_class.tokens_to_be_ignored.include?(token)
+      if @cannot_ignore
+        false
+      else
+        @self_class.tokens_to_be_ignored.include?(token)
+      end
     end
 
     def push(token)
