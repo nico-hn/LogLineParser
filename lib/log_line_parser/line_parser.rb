@@ -132,6 +132,7 @@ module LineParser
 
     def initialize
       @subnodes = []
+      @self_class = self.class
     end
 
     def accept(visitor, memo=nil)
@@ -143,15 +144,15 @@ module LineParser
     end
 
     def subnode_class(token)
-      self.class.start_tag_to_subnode[token]
+      @self_class.start_tag_to_subnode[token]
     end
 
     def end_tag?(token)
-      self.class.end_tag == token
+      @self_class.end_tag == token
     end
 
     def can_ignore?(token)
-      self.class.tokens_to_be_ignored.include?(token)
+      @self_class.tokens_to_be_ignored.include?(token)
     end
 
     def push(token)
@@ -176,11 +177,11 @@ module LineParser
     end
 
     def remove_escaped_part(token)
-      token.sub(self.class.to_be_escaped_re, ''.freeze)
+      token.sub(@self_class.to_be_escaped_re, ''.freeze)
     end
 
     def part_to_be_escaped(token)
-      self.class.to_be_escaped.each do |e|
+      @self_class.to_be_escaped.each do |e|
         return e if token.start_with?(e)
       end
       nil
