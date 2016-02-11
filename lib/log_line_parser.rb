@@ -8,22 +8,15 @@ require "date"
 
 module LogLineParser
   include LineParser
+  extend LineParser::Helpers
 
   class LogLineTokenizer < Tokenizer
     setup(%w([ ] - \\ "), ['\s+']) #"
   end
 
-  class RootNode < Node
-    setup(nil, nil, [" "])
-  end
-
-  class TimeNode < Node
-    setup("[", "]", [])
-  end
-
-  class StringNode < Node
-    setup('"', '"', [])
-  end
+  define_nodes(RootNode: [nil, nil, [" "]],
+               TimeNode: ["[", "]", []],
+               StringNode: ['"', '"', []])
 
   class StringEscapeNode < EscapeNode
     setup('\\', nil, [], ['\\', '"', 't', 'n', 'r'])
