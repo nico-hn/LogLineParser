@@ -190,8 +190,8 @@ module LineParser
   module Helpers
     def define_nodes(class_name_and_setup_values)
       class_name_and_setup_values.each do |name, setup_values|
-        class_name = const_set(name, Class.new(Node))
-        class_name.setup(*setup_values)
+        new_node_class = const_set(name, Class.new(Node))
+        new_node_class.setup(*setup_values)
       end
     end
   end
