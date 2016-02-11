@@ -10,7 +10,7 @@ class TestLogLineParser < Minitest::Test
     refute_nil ::LogLineParser::VERSION
   end
 
-  def test_tokenize_tokenize
+  def test_log_line_tokenizer_tokenize
     [[
         "192.168.0.1 - - [time ]",
         ["192.168.0.1", " ", "-", " ", "-", " ", "[", "time", " ", "]"]
@@ -20,7 +20,7 @@ class TestLogLineParser < Minitest::Test
         ["192.168.0.1", " ", "-", " ", "-", " ", "[", "time", " ", "]", "  ", "123"]
       ]
     ].each do |str, expected|
-      tokens = LogLineParser::Tokenizer.tokenize(str)
+      tokens = LogLineParser::LogLineTokenizer.tokenize(str)
       assert_equal(expected, tokens)
     end
   end
@@ -28,7 +28,7 @@ class TestLogLineParser < Minitest::Test
   def test_log_line_node_stack
     line = '192.168.3.4 - - [time string] - "string value" -'
     stack = LogLineParser::LogLineNodeStack.new
-    tokens = LogLineParser::Tokenizer.tokenize(line)
+    tokens = LogLineParser::LogLineTokenizer.tokenize(line)
     expected = ["192.168.3.4", "-", "-", "time string", "-", "string value", "-"]
 
     tokens.each do |token|
@@ -42,7 +42,7 @@ class TestLogLineParser < Minitest::Test
   def test_escape_in_string_node
     line = '192.168.3.4 - - [time string] - "string \\tvalue" -'
     stack = LogLineParser::LogLineNodeStack.new
-    tokens = LogLineParser::Tokenizer.tokenize(line)
+    tokens = LogLineParser::LogLineTokenizer.tokenize(line)
     expected = ["192.168.3.4", "-", "-", "time string", "-", "string \tvalue", "-"]
 
     tokens.each do |token|

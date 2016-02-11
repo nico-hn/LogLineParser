@@ -48,8 +48,6 @@ module LogLineParser
         return Regexp.compile(tokens_str), Regexp.compile("(?=#{tokens_str})")
       end
     end
-
-    setup(%w([ ] - \\ "), ['\s+']) #"
   end
 
   class NodeStack
@@ -190,6 +188,10 @@ module LogLineParser
     end
   end
 
+  class LogLineTokenizer < Tokenizer
+    setup(%w([ ] - \\ "), ['\s+']) #"
+  end
+
   class RootNode < Node
     setup(nil, nil, [" "])
   end
@@ -301,7 +303,7 @@ module LogLineParser
 
   def self.parse(line)
     stack = LogLineNodeStack.new
-    tokens = Tokenizer.tokenize(line.chomp)
+    tokens = LogLineTokenizer.tokenize(line.chomp)
     tokens.each {|token| stack.push token }
     stack
   end
