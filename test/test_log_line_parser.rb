@@ -98,6 +98,22 @@ class TestLogLineParser < Minitest::Test
     assert_equal("/", record2.referer_resource)
   end
 
+  def test_combined_log_record_parse_time
+    parse_time_enabled = LogLineParser::CombinedLogRecord.parse_time_value
+    expected_time_str = "07/Feb/2016:07:39:42 +0900"
+    expected_time = "2016-02-07 07:39:42 +0900"
+
+    LogLineParser::CombinedLogRecord.parse_time_value = false
+    record = LogLineParser.parse(@log_line).to_record
+    assert_equal(expected_time_str, record.time.to_s)
+
+    LogLineParser::CombinedLogRecord.parse_time_value = true
+    record = LogLineParser.parse(@log_line).to_record
+    assert_equal(expected_time, record.time.to_s)
+
+    LogLineParser::CombinedLogRecord.parse_time_value = parse_time_enabled
+  end
+
   def test_combined_log_record_date
     record = LogLineParser.parse(@log_line).to_record
     assert_equal("20160207", record.date.strftime("%Y%m%d"))

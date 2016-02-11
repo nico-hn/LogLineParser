@@ -68,13 +68,16 @@ module LogLineParser
     SCHEMES =%w(http: https:)
 
     attr_reader :method, :protocol, :resource, :referer_url, :referer_resource
+    @parse_time_value = true
 
     class << self
+      attr_accessor :parse_time_value
+
       def create(log_fields)
         new(*log_fields).tap do |rec|
           rec.last_request_status = rec.last_request_status.to_i
           rec.size_of_response = response_size(rec)
-          rec.time = parse_time(rec.time)
+          rec.time = parse_time(rec.time) if @parse_time_value
           rec.parse_request
           rec.parse_referer
         end
