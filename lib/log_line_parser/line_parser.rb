@@ -135,6 +135,10 @@ module LineParser
       @subnodes = []
     end
 
+    def accept(visitor, memo=nil)
+      visitor.visit(self, memo)
+    end
+
     def to_s
       @subnodes.join
     end
