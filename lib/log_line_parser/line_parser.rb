@@ -46,7 +46,7 @@ module LineParser
   end
 
   class NodeStack
-    attr_reader :current_node
+    attr_reader :current_node, :root
 
     class << self
       attr_reader :root_node_class
@@ -57,19 +57,20 @@ module LineParser
     end
 
     def initialize
-      @current_node = self.class.root_node_class.new
-      @stack = [@current_node]
+      @root = self.class.root_node_class.new
+      @current_node = @root
     end
 
     def push_node(node)
       @current_node.push node
+      node.node_below = @current_node
       @current_node = node
-      @stack.push node
     end
 
     def pop
-      popped = @stack.pop
-      @current_node = @stack[-1]
+      popped = @current_node
+      @current_node = @current_node.node_below
+      popped.node_below = nil
       popped
     end
 
@@ -101,13 +102,11 @@ module LineParser
       pop
       push_token(remaining_part) if remaining_part
     end
-
-    def root
-      @stack[0]
-    end
   end
 
   class Node
+    attr_accessor :node_below
+
     class << self
       attr_reader :start_tag, :end_tag, :subnode_classes
       attr_reader :start_tag_to_subnode, :tokens_to_be_ignored
