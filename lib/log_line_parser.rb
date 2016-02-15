@@ -123,5 +123,9 @@ module LogLineParser
     tokens = LogLineTokenizer.tokenize(line.chomp)
     tokens.each {|token| stack.push token }
     stack
+    # I'm not checking the reason yet, but the following way of pushing
+    # tokens directly into the stack is very slow.
+    #
+    # LogLineTokenizer.tokenize(line.chomp, stack)
   end
 end
