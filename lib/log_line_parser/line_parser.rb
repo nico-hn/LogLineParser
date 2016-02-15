@@ -5,9 +5,8 @@ module LineParser
     class << self
       attr_reader :special_token_re, :non_special_token_re
 
-      def tokenize(str)
+      def tokenize(str, tokens=[])
         @scanner.string = str
-        tokens = []
         token = true # to start looping, you should assign a truthy value
         while token
           tokens.push token if token = scan_token
