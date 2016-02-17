@@ -122,11 +122,13 @@ module LogLineParser
     end
   end
 
-  CombinedLogRecord = Struct.new(*(Fields::COMBINED))
-
-  CombinedLogRecord.extend(ClassMethods)
-  CombinedLogRecord.include(InstanceMethods)
-  CombinedLogRecord.parse_time_value = true
+  def self.create_record_type(field_names)
+    record_type = Struct.new(*field_names)
+    record_type.extend(ClassMethods)
+    record_type.include(InstanceMethods)
+    record_type.parse_time_value = true
+    record_type
+  end
 
   def self.parse(line)
     stack = LogLineNodeStack.new
@@ -138,4 +140,6 @@ module LogLineParser
     #
     # LogLineTokenizer.tokenize(line.chomp, stack)
   end
+
+  CombinedLogRecord = create_record_type(Fields::COMBINED)
 end
