@@ -69,6 +69,10 @@ module LogLineParser
 
     attr_accessor :parse_time_value
 
+    def parse(line)
+      create(LogLineParser.parse(line))
+    end
+
     def create(log_fields)
       new(*log_fields).tap do |rec|
         rec.last_request_status = rec.last_request_status.to_i
