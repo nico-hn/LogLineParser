@@ -75,29 +75,13 @@ module LogLineParser
     end
   end
 
-  # LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
-
-  CombinedLogRecord = Struct.new(:remote_host,
-                                 :remote_logname,
-                                 :remote_user,
-                                 :time,
-                                 :first_line_of_request,
-                                 :last_request_status,
-                                 :size_of_response,
-                                 :referer,
-                                 :user_agent)
-
-  class CombinedLogRecord
-    extend ClassMethods
-
+  module InstanceMethods
     SPACE_RE = / /
     SLASH_RE = /\//
     SLASH = '/'
     SCHEMES =%w(http: https:)
 
-
     attr_reader :method, :protocol, :resource, :referer_url, :referer_resource
-    @parse_time_value = true
 
     def date(offset=0)
       DateTime.parse((self.time + offset * 86400).to_s)
@@ -120,6 +104,25 @@ module LogLineParser
         @referer_resource = self.referer
       end
     end
+  end
+
+  # LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
+
+  CombinedLogRecord = Struct.new(:remote_host,
+                                 :remote_logname,
+                                 :remote_user,
+                                 :time,
+                                 :first_line_of_request,
+                                 :last_request_status,
+                                 :size_of_response,
+                                 :referer,
+                                 :user_agent)
+
+  class CombinedLogRecord
+    extend ClassMethods
+    include InstanceMethods
+
+    @parse_time_value = true
   end
 
   def self.parse(line)
