@@ -118,4 +118,19 @@ class TestLogLineParser < Minitest::Test
     record = LogLineParser.parse(@log_line).to_record
     assert_equal("20160207", record.date.strftime("%Y%m%d"))
   end
+
+  def test_combined_log_record_parse
+    record = LogLineParser::CombinedLogRecord.parse(@log_line)
+    record2 = LogLineParser::CombinedLogRecord.parse(@log_line2)
+    expected_user_agent = 'Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0'
+    expected_last_request_status = 200
+    expected_time = "2016-02-07 07:39:42 +0900"
+    assert_equal(expected_user_agent, record.user_agent)
+    assert_equal(expected_last_request_status, record.last_request_status)
+    assert_equal(expected_time, record.time.to_s)
+    assert_equal("GET", record.method)
+    assert_equal("http://www.example.org/", record.referer_url)
+    assert_equal("/start.html", record.referer_resource)
+    assert_equal("/", record2.referer_resource)
+  end
 end
