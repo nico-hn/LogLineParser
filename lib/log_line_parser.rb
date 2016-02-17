@@ -10,6 +10,22 @@ module LogLineParser
   include LineParser
   extend LineParser::Helpers
 
+  module Fields
+    # LogFormat "%h %l %u %t \"%r\" %>s %b" common
+    COMMON = [
+      :remote_host,
+      :remote_logname,
+      :remote_user,
+      :time,
+      :first_line_of_request,
+      :last_request_status,
+      :size_of_response,
+    ].freeze
+
+    # LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
+    COMBINED = (COMMON + [:referer, :user_agent]).freeze
+  end
+
   class LogLineTokenizer < Tokenizer
     setup(%w([ ] - \\ "), ['\s+']) #"
   end
@@ -106,17 +122,7 @@ module LogLineParser
     end
   end
 
-  # LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
-
-  CombinedLogRecord = Struct.new(:remote_host,
-                                 :remote_logname,
-                                 :remote_user,
-                                 :time,
-                                 :first_line_of_request,
-                                 :last_request_status,
-                                 :size_of_response,
-                                 :referer,
-                                 :user_agent)
+  CombinedLogRecord = Struct.new(*(Fields::COMBINED))
 
   CombinedLogRecord.extend(ClassMethods)
   CombinedLogRecord.include(InstanceMethods)
