@@ -121,9 +121,9 @@ module LogLineParser
   class CombinedLogRecord
     extend ClassMethods
     include InstanceMethods
-
-    @parse_time_value = true
   end
+
+  CombinedLogRecord.parse_time_value = true
 
   def self.parse(line)
     stack = LogLineNodeStack.new
