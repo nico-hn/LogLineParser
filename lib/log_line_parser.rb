@@ -48,6 +48,33 @@ module LogLineParser
     end
   end
 
+  module ClassMethods
+    DATE_TIME_SEP = /:/
+
+    attr_accessor :parse_time_value
+
+    def create(log_fields)
+      new(*log_fields).tap do |rec|
+        rec.last_request_status = rec.last_request_status.to_i
+        rec.size_of_response = response_size(rec)
+        rec.time = parse_time(rec.time) if @parse_time_value
+        rec.parse_request
+        rec.parse_referer
+      end
+    end
+
+    private
+
+    def response_size(rec)
+      size_str = rec.size_of_response
+      size_str == "-".freeze ? 0 : size_str.to_i
+    end
+
+    def parse_time(time_str)
+      Time.parse(time_str.sub(DATE_TIME_SEP, " ".freeze))
+    end
+  end
+
   # LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
 
   CombinedLogRecord = Struct.new(:remote_host,
@@ -61,39 +88,16 @@ module LogLineParser
                                  :user_agent)
 
   class CombinedLogRecord
-    DATE_TIME_SEP = /:/
+    extend ClassMethods
+
     SPACE_RE = / /
     SLASH_RE = /\//
     SLASH = '/'
     SCHEMES =%w(http: https:)
 
+
     attr_reader :method, :protocol, :resource, :referer_url, :referer_resource
     @parse_time_value = true
-
-    class << self
-      attr_accessor :parse_time_value
-
-      def create(log_fields)
-        new(*log_fields).tap do |rec|
-          rec.last_request_status = rec.last_request_status.to_i
-          rec.size_of_response = response_size(rec)
-          rec.time = parse_time(rec.time) if @parse_time_value
-          rec.parse_request
-          rec.parse_referer
-        end
-      end
-
-      private
-
-      def response_size(rec)
-        size_str = rec.size_of_response
-        size_str == "-".freeze ? 0 : size_str.to_i
-      end
-
-      def parse_time(time_str)
-        Time.parse(time_str.sub(DATE_TIME_SEP, " ".freeze))
-      end
-    end
 
     def date(offset=0)
       DateTime.parse((self.time + offset * 86400).to_s)
