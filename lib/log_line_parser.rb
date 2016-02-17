@@ -118,11 +118,8 @@ module LogLineParser
                                  :referer,
                                  :user_agent)
 
-  class CombinedLogRecord
-    extend ClassMethods
-    include InstanceMethods
-  end
-
+  CombinedLogRecord.extend(ClassMethods)
+  CombinedLogRecord.include(InstanceMethods)
   CombinedLogRecord.parse_time_value = true
 
   def self.parse(line)
