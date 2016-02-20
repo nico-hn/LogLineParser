@@ -10,6 +10,8 @@ module LogLineParser
   include LineParser
   extend LineParser::Helpers
 
+  class MalFormedRecordError < StandardError; end
+
   module Fields
     # LogFormat "%h %l %u %t \"%r\" %>s %b" common
     COMMON = [
