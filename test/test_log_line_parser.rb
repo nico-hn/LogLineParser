@@ -4,6 +4,7 @@ class TestLogLineParser < Minitest::Test
   def setup
     @log_line = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org/start.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line2 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org/" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
+    @mal_formed_log_line = 'some thing wrong'
   end
 
   def test_that_it_has_a_version_number
@@ -132,5 +133,13 @@ class TestLogLineParser < Minitest::Test
     assert_equal("http://www.example.org/", record.referer_url)
     assert_equal("/start.html", record.referer_resource)
     assert_equal("/", record2.referer_resource)
+  end
+
+  def test_mal_formed_record_error
+    err = assert_raises(LogLineParser::MalFormedRecordError) do
+      LogLineParser::CombinedLogRecord.parse(@mal_formed_log_line)
+    end
+
+    assert_equal(@mal_formed_log_line, err.message)
   end
 end

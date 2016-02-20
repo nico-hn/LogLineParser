@@ -69,10 +69,14 @@ module LogLineParser
   module ClassMethods
     DATE_TIME_SEP = /:/
 
-    attr_accessor :parse_time_value
+    attr_accessor :parse_time_value, :number_of_fields
 
     def parse(line)
-      create(LogLineParser.parse(line))
+      fields = LogLineParser.parse(line).to_a
+      unless fields.length == @number_of_fields
+        raise MalFormedRecordError, line
+      end
+      create(fields)
     end
 
     def create(log_fields)
@@ -133,6 +137,7 @@ module LogLineParser
     record_type.extend(ClassMethods)
     record_type.include(InstanceMethods)
     record_type.parse_time_value = true
+    record_type.number_of_fields = field_names.length
     record_type
   end
 
