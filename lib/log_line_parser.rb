@@ -73,10 +73,6 @@ module LogLineParser
     attr_accessor :parse_time_value
     attr_accessor :referer_defined
 
-    def extended(record_class)
-      @referer_defined = record_class.instance_methods.include?(:referer)
-    end
-
     def parse(line)
       fields = LogLineParser.parse(line).to_a
       unless fields.length == @number_of_fields
