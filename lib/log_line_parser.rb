@@ -104,7 +104,7 @@ module LogLineParser
   module InstanceMethods
     SPACE_RE = / /
     SLASH_RE = /\//
-    SLASH = '/'
+    SLASH = '/'.freeze
     SCHEMES =%w(http: https:)
 
     attr_reader :method, :protocol, :resource, :referer_url, :referer_resource
@@ -125,7 +125,7 @@ module LogLineParser
       parts = self.referer.split(SLASH_RE, 4)
       if SCHEMES.include? parts[0]
         @referer_url = parts.shift(3).join(SLASH).concat(SLASH)
-        @referer_resource = SLASH + parts.shift unless parts.empty?
+        @referer_resource = parts.empty? ? SLASH : SLASH + parts.shift
       else
         @referer_resource = self.referer
       end
