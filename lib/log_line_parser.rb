@@ -114,7 +114,7 @@ module LogLineParser
     SLASH = '/'.freeze
     SCHEMES =%w(http: https:)
 
-    attr_reader :method, :protocol, :resource, :referer_url, :referer_resource
+    attr_reader :method, :protocol, :resource, :referer_host, :referer_resource
 
     def date(offset=0)
       DateTime.parse((self.time + offset * 86400).to_s)
@@ -131,7 +131,7 @@ module LogLineParser
       return if self.referer == "-"
       parts = self.referer.split(SLASH_RE, 4)
       if SCHEMES.include? parts[0]
-        @referer_url = parts.shift(3).join(SLASH).concat(SLASH)
+        @referer_host = parts.shift(3).join(SLASH).concat(SLASH)
         @referer_resource = parts.empty? ? SLASH : SLASH + parts.shift
       else
         @referer_resource = self.referer

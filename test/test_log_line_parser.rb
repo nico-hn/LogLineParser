@@ -104,7 +104,7 @@ class TestLogLineParser < Minitest::Test
     assert_equal(expected_last_request_status, record.last_request_status)
     assert_equal(expected_time, record.time.to_s)
     assert_equal("GET", record.method)
-    assert_equal("http://www.example.org/", record.referer_url)
+    assert_equal("http://www.example.org/", record.referer_host)
     assert_equal("/start.html", record.referer_resource)
     assert_equal("/", record2.referer_resource)
     assert_equal("/", record3.referer_resource)
@@ -141,7 +141,7 @@ class TestLogLineParser < Minitest::Test
     assert_equal(expected_last_request_status, record.last_request_status)
     assert_equal(expected_time, record.time.to_s)
     assert_equal("GET", record.method)
-    assert_equal("http://www.example.org/", record.referer_url)
+    assert_equal("http://www.example.org/", record.referer_host)
     assert_equal("/start.html", record.referer_resource)
     assert_equal("/", record2.referer_resource)
   end
