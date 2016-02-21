@@ -70,6 +70,11 @@ module LogLineParser
     DATE_TIME_SEP = /:/
 
     attr_accessor :parse_time_value, :number_of_fields
+    attr_accessor :referer_defined
+
+    def extended(record_class)
+      @referer_defined = record_class.instance_methods.include?(:referer)
+    end
 
     def parse(line)
       fields = LogLineParser.parse(line).to_a
@@ -85,7 +90,7 @@ module LogLineParser
         rec.size_of_response = response_size(rec)
         rec.time = parse_time(rec.time) if @parse_time_value
         rec.parse_request
-        rec.parse_referer
+        rec.parse_referer if @referer_defined
       end
     end
 
@@ -138,6 +143,7 @@ module LogLineParser
     record_type.include(InstanceMethods)
     record_type.parse_time_value = true
     record_type.number_of_fields = field_names.length
+    record_type.referer_defined = field_names.include?(:referer)
     record_type
   end
 
@@ -152,5 +158,6 @@ module LogLineParser
     # LogLineTokenizer.tokenize(line.chomp, stack)
   end
 
+  CommonLogRecord = create_record_type(Fields::COMMON)
   CombinedLogRecord = create_record_type(Fields::COMBINED)
 end
