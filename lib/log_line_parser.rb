@@ -69,9 +69,14 @@ module LogLineParser
   module ClassMethods
     DATE_TIME_SEP = /:/
 
-    attr_accessor :field_names, :number_of_fields
     attr_accessor :parse_time_value
-    attr_accessor :referer_defined
+
+    def setup(field_names)
+      @field_names = field_names
+      @number_of_fields = field_names.length
+      @referer_defined = field_names.include?(:referer)
+      @parse_time_value = true
+    end
 
     def parse(line)
       fields = LogLineParser.parse(line).to_a
@@ -138,10 +143,7 @@ module LogLineParser
     record_type = Struct.new(*field_names)
     record_type.extend(ClassMethods)
     record_type.include(InstanceMethods)
-    record_type.parse_time_value = true
-    record_type.field_names = field_names
-    record_type.number_of_fields = field_names.length
-    record_type.referer_defined = field_names.include?(:referer)
+    record_type.setup(field_names)
     record_type
   end
 
