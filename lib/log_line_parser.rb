@@ -135,6 +135,7 @@ module LogLineParser
         @referer_host = parts.shift(3).join(SLASH).concat(SLASH)
         @referer_resource = parts.empty? ? SLASH : SLASH + parts.shift
       else
+        @referer_host = "".freeze
         @referer_resource = self.referer
       end
     end
