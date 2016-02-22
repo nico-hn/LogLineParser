@@ -48,15 +48,17 @@ module LineParser
     attr_reader :current_node, :root
 
     class << self
-      attr_reader :root_node_class
+      attr_reader :root_node_class, :default_node_class
 
-      def setup(root_node_class)
+      def setup(root_node_class, default_node_class)
         @root_node_class = root_node_class
+        @default_node_class = default_node_class
       end
     end
 
     def initialize
       @root = self.class.root_node_class.new
+      @default_node_class = self.class.default_node_class
       @current_node = @root
     end
 
@@ -86,6 +88,9 @@ module LineParser
         push_node(subnode_class.new)
       elsif @current_node.can_ignore?(token)
         nil
+      elsif @current_node == @root
+        push_node(@default_node_class.new)
+        push_token(token)
       else
         push_token(token)
       end

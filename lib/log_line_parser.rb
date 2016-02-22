@@ -33,6 +33,7 @@ module LogLineParser
   end
 
   define_nodes(RootNode: [nil, nil, [" "]],
+               BasicFieldNode: [nil, " ", []],
                TimeNode: ["[", "]", []],
                StringNode: ['"', '"', []])
 
@@ -55,7 +56,7 @@ module LogLineParser
   StringNode.register_subnode_classes(StringEscapeNode)
 
   class LogLineNodeStack < NodeStack
-    setup(RootNode)
+    setup(RootNode, BasicFieldNode)
 
     def to_a
       root.subnodes.map {|node| node.to_s }
