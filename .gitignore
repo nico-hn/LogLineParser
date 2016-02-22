@@ -10,3 +10,5 @@
 .ruby-version
 *~
 \#*\#
+/*.gem
+/*.zip
