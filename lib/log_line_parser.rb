@@ -163,7 +163,9 @@ module LogLineParser
   CommonLogRecord = create_record_type(Fields::COMMON)
   CombinedLogRecord = create_record_type(Fields::COMBINED)
 
-  def self.each_record(record_type=CommonLogRecord, input=ARGF, error_output=STDERR)
+  def self.each_record(record_type: CommonLogRecord,
+                       input: ARGF,
+                       error_output: STDERR)
     input.each_line do |line|
       begin
         yield record_type.parse(line)
