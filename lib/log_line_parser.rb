@@ -62,8 +62,8 @@ module LogLineParser
       root.subnodes.map {|node| node.to_s }
     end
 
-    def to_record
-      CombinedLogRecord.create(to_a)
+    def to_record(record_type=CombinedLogRecord)
+      record_type.create(to_a)
     end
   end
 
