@@ -25,7 +25,7 @@ YetiBot
       bots_re =~ record.user_agent
     end
 
-    def open_multiple_output_files(base_names, dir=nil, ext="log")
+    def self.open_multiple_output_files(base_names, dir=nil, ext="log")
       logs = {}
       filepath = dir ? File.join(dir, "%s.#{ext}") : "%s.#{ext}"
       base_names.each do |base|
