@@ -7,6 +7,7 @@ class TestLogLineParser < Minitest::Test
     @log_line2 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org/" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line3 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @irregular_log_line = 'sub_domain-192-168-0-1.example.org - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "/dir/start.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
+    @googlebot = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"'
     @mal_formed_log_line = 'some thing wrong'
   end
 
@@ -175,5 +176,12 @@ class TestLogLineParser < Minitest::Test
     end
 
     assert_equal(@mal_formed_log_line, err.message)
+  end
+
+  def test_utils_access_by_bots
+    bot_record = LogLineParser::CombinedLogRecord.parse(@googlebot)
+    normal_record = LogLineParser::CombinedLogRecord.parse(@log_line)
+    assert(LogLineParser::Utils.access_by_bots?(bot_record))
+    assert_nil(LogLineParser::Utils.access_by_bots?(normal_record))
   end
 end
