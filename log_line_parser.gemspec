@@ -6,6 +6,7 @@ require 'log_line_parser/version'
 Gem::Specification.new do |spec|
   spec.name          = "log_line_parser"
   spec.version       = LogLineParser::VERSION
+  spec.required_ruby_version = ">= 2.0.0"
   spec.authors       = ["HASHIMOTO, Naoki"]
   spec.email         = ["hashimoto.naoki@gmail.com"]
 
