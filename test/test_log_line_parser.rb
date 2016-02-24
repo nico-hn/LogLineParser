@@ -185,4 +185,10 @@ class TestLogLineParser < Minitest::Test
     assert(LogLineParser::Utils.access_by_bots?(bot_record))
     assert_nil(LogLineParser::Utils.access_by_bots?(normal_record))
   end
+
+  def test_utils_referred_from
+    record = LogLineParser::CombinedLogRecord.parse(@log_line)
+    assert_equal(true, LogLineParser::Utils.referred_from?(record, "www.example.org", ["/start.html"]))
+    assert_equal(false, LogLineParser::Utils.referred_from?(record, "www.example.org", ["/non-existent.html"]))
+  end
 end

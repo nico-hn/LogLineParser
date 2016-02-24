@@ -25,6 +25,12 @@ YetiBot
       bots_re =~ record.user_agent
     end
 
+    def self.referred_from?(record, host_name, resources=[])
+      target_host = (record.referer_host == host_name)
+      return target_host if resources.empty?
+      target_host and resources.include?(record.referer_resource)
+    end
+
     def self.open_multiple_output_files(base_names, dir=nil, ext="log")
       logs = {}
       filepath = dir ? File.join(dir, "%s.#{ext}") : "%s.#{ext}"
