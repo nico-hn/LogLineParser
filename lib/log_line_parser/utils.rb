@@ -31,6 +31,11 @@ YetiBot
       target_host and resources.include?(record.referer_resource)
     end
 
+    def self.referred_from_under?(record, host_name, path)
+      record.referer_host == host_name and
+        record.referer_resource.start_with?(path)
+    end
+
     def self.access_to_resources?(record, resources=[])
       resources.include?(record.resource)
     end

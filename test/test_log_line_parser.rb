@@ -6,6 +6,7 @@ class TestLogLineParser < Minitest::Test
     @log_line = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org/start.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line2 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org/" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line3 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
+    @log_line4 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org/subdir/" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @irregular_log_line = 'sub_domain-192-168-0-1.example.org - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "/dir/start.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @googlebot = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"'
     @mal_formed_log_line = 'some thing wrong'
@@ -190,6 +191,14 @@ class TestLogLineParser < Minitest::Test
     record = LogLineParser::CombinedLogRecord.parse(@log_line)
     assert_equal(true, LogLineParser::Utils.referred_from?(record, "www.example.org", ["/start.html"]))
     assert_equal(false, LogLineParser::Utils.referred_from?(record, "www.example.org", ["/non-existent.html"]))
+  end
+
+  def test_utils_referred_from_under
+    record = LogLineParser::CombinedLogRecord.parse(@log_line4)
+    assert_equal(true, LogLineParser::Utils.referred_from_under?(record, "www.example.org", "/"))
+    assert_equal(true, LogLineParser::Utils.referred_from_under?(record, "www.example.org", "/subdir/"))
+    assert_equal(false, LogLineParser::Utils.referred_from_under?(record, "www.example.org", "/non-existent/"))
+    assert_equal(false, LogLineParser::Utils.referred_from_under?(record, "www.example.com", "/subdir/"))
   end
 
   def test_utils_access_to_resources
