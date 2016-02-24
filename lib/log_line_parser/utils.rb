@@ -25,14 +25,11 @@ YetiBot
       bots_re =~ record.user_agent
     end
 
-    def self.referred_from?(record, host_name, resources=[])
-      target_host = (record.referer_host == host_name)
-      return target_host if resources.empty?
-      target_host and resources.include?(record.referer_resource)
+    def self.referred_from?(record, resources=[])
+      resources.include?(record.referer_resource)
     end
 
-    def self.referred_from_under?(record, host_name, path)
-      record.referer_host == host_name and
+    def self.referred_from_under?(record, path)
         record.referer_resource.start_with?(path)
     end
 

@@ -195,16 +195,15 @@ class TestLogLineParser < Minitest::Test
 
   def test_utils_referred_from
     record = LogLineParser::CombinedLogRecord.parse(@log_line)
-    assert_equal(true, LogLineParser::Utils.referred_from?(record, "www.example.org", ["/start.html"]))
-    assert_equal(false, LogLineParser::Utils.referred_from?(record, "www.example.org", ["/non-existent.html"]))
+    assert_equal(true, LogLineParser::Utils.referred_from?(record, ["/start.html"]))
+    assert_equal(false, LogLineParser::Utils.referred_from?(record, ["/non-existent.html"]))
   end
 
   def test_utils_referred_from_under
     record = LogLineParser::CombinedLogRecord.parse(@log_line4)
-    assert_equal(true, LogLineParser::Utils.referred_from_under?(record, "www.example.org", "/"))
-    assert_equal(true, LogLineParser::Utils.referred_from_under?(record, "www.example.org", "/subdir/"))
-    assert_equal(false, LogLineParser::Utils.referred_from_under?(record, "www.example.org", "/non-existent/"))
-    assert_equal(false, LogLineParser::Utils.referred_from_under?(record, "www.example.com", "/subdir/"))
+    assert_equal(true, LogLineParser::Utils.referred_from_under?(record, "/"))
+    assert_equal(true, LogLineParser::Utils.referred_from_under?(record, "/subdir/"))
+    assert_equal(false, LogLineParser::Utils.referred_from_under?(record, "/non-existent/"))
   end
 
   def test_utils_access_to_resources
