@@ -130,7 +130,7 @@ module LogLineParser
     end
 
     def parse_referer
-      return if self.referer == "-"
+      return if self.referer == "-".freeze
       parts = self.referer.split(SLASH_RE, 4)
       if SCHEMES.include? parts[0]
         @referer_scheme = parts[0]
