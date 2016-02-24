@@ -137,6 +137,7 @@ module LogLineParser
         @referer_host = parts[2]
         @referer_resource = parts[3] ? SLASH + parts[3] : SLASH
       else
+        @referer_scheme = "".freeze
         @referer_host = "".freeze
         @referer_resource = self.referer
       end
