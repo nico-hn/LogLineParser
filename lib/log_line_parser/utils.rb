@@ -31,6 +31,10 @@ YetiBot
       target_host and resources.include?(record.referer_resource)
     end
 
+    def self.access_to_resources?(record, resources=[])
+      resources.include?(record.resource)
+    end
+
     def self.open_multiple_output_files(base_names, dir=nil, ext="log")
       logs = {}
       filepath = dir ? File.join(dir, "%s.#{ext}") : "%s.#{ext}"

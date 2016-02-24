@@ -191,4 +191,10 @@ class TestLogLineParser < Minitest::Test
     assert_equal(true, LogLineParser::Utils.referred_from?(record, "www.example.org", ["/start.html"]))
     assert_equal(false, LogLineParser::Utils.referred_from?(record, "www.example.org", ["/non-existent.html"]))
   end
+
+  def test_utils_access_to_resources
+    record = LogLineParser::CombinedLogRecord.parse(@log_line)
+    assert_equal(true, LogLineParser::Utils.access_to_resources?(record, ["/index.html"]))
+    assert_equal(false, LogLineParser::Utils.access_to_resources?(record, ["/start.html"]))
+  end
 end
