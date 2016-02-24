@@ -165,6 +165,12 @@ class TestLogLineParser < Minitest::Test
     assert_equal("/", record2.referer_resource)
   end
 
+  def test_combined_log_record_referred_from_host
+    record = LogLineParser::CombinedLogRecord.parse(@log_line)
+    assert_equal(true,record.referred_from_host?("www.example.org"))
+    assert_equal(false,record.referred_from_host?("www.example.com"))
+  end
+
   def test_irregular_record
     record = LogLineParser::CombinedLogRecord.parse(@irregular_log_line)
     assert_equal("sub_domain-192-168-0-1.example.org", record.remote_host)

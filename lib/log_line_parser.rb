@@ -141,6 +141,10 @@ module LogLineParser
         @referer_resource = self.referer
       end
     end
+
+    def referred_from_host?(host_name)
+      @referer_host == host_name
+    end
   end
 
   def self.create_record_type(field_names)
