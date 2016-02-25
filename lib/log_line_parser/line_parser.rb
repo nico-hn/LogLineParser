@@ -88,10 +88,8 @@ module LineParser
         push_node(subnode_class.new)
       elsif @current_node.can_ignore?(token)
         nil
-      elsif @current_node == @root
-        push_node(@default_node_class.new)
-        push_token(token)
       else
+        push_node(@default_node_class.new) if @current_node == @root
         push_token(token)
       end
     end
