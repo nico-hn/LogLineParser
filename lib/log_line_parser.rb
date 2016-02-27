@@ -52,8 +52,8 @@ module LogLineParser
     end
   end
 
-  RootNode.register_subnode_classes(TimeNode, StringNode)
-  StringNode.register_subnode_classes(StringEscapeNode)
+  define_node_nesting(RootNode => [TimeNode, StringNode],
+                      StringNode => [StringEscapeNode])
 
   class LogLineNodeStack < NodeStack
     setup(RootNode, BasicFieldNode)

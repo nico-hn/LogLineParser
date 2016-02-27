@@ -201,5 +201,11 @@ module LineParser
         new_node_class.setup(*setup_values)
       end
     end
+
+    def define_node_nesting(parent_children={})
+      parent_children.each do |parent, children|
+        parent.register_subnode_classes(*children)
+      end
+    end
   end
 end
