@@ -69,23 +69,12 @@ module LogLineParser
       record_type.format_strings.each_with_index do |key, i|
         h[key] = values[i]
       end
-      parse_request(h)
+      record_type.parse_request(h)
       h
     end
 
     def to_record(record_type=CombinedLogRecord)
       record_type.create(to_a)
-    end
-
-    private
-
-    def parse_request(h)
-      if first_line_of_request = h["%r".freeze]
-        request = first_line_of_request.split(/ /)
-        h["%m"] ||= request.shift
-        h["%H"] ||= request.pop
-        h["%U%q"] ||= request.size == 1 ? request[0] : request.join(" ".freeze)
-      end
     end
   end
 
@@ -117,6 +106,25 @@ module LogLineParser
         rec.time = parse_time(rec.time) if @parse_time_value
         rec.parse_request
         rec.parse_referer if @referer_defined
+      end
+    end
+
+    def to_hash(line)
+      values = LogLineParser.parse(line).to_a
+      h = {}
+      @format_strings.each_with_index do |key, i|
+        h[key] = values[i]
+      end
+      parse_request(h)
+      h
+    end
+
+    def parse_request(h)
+      if first_line_of_request = h["%r".freeze]
+        request = first_line_of_request.split(/ /)
+        h["%m"] ||= request.shift
+        h["%H"] ||= request.pop
+        h["%U%q"] ||= request.size == 1 ? request[0] : request.join(" ".freeze)
       end
     end
 

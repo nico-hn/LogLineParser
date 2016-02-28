@@ -147,6 +147,11 @@ class TestLogLineParser < Minitest::Test
     assert_equal("/", record3.referer_resource)
   end
 
+  def test_combined_log_record_to_hash
+    h = LogLineParser::CombinedLogRecord.to_hash(@log_line)
+    assert_equal(@log_line_hash, h)
+  end
+
   def test_combined_log_record_parse_time
     parse_time_enabled = LogLineParser::CombinedLogRecord.parse_time_value
     expected_time_str = "07/Feb/2016:07:39:42 +0900"
