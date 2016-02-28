@@ -63,15 +63,36 @@ module LogLineParser
       root.subnodes.map {|node| node.to_s }
     end
 
+    def to_hash(record_type=CombinedLogRecord)
+      values = to_a
+      h = {}
+      record_type.format_strings.each_with_index do |key, i|
+        h[key] = values[i]
+      end
+      parse_request(h)
+      h
+    end
+
     def to_record(record_type=CombinedLogRecord)
       record_type.create(to_a)
+    end
+
+    private
+
+    def parse_request(h)
+      if first_line_of_request = h["%r".freeze]
+        request = first_line_of_request.split(/ /)
+        h["%m"] ||= request.shift
+        h["%H"] ||= request.pop
+        h["%U%q"] ||= request.size == 1 ? request[0] : request.join(" ".freeze)
+      end
     end
   end
 
   module ClassMethods
     DATE_TIME_SEP = /:/
 
-    attr_accessor :parse_time_value
+    attr_accessor :parse_time_value, :format_strings
 
     def setup(field_names, format_strings=nil)
       @field_names = field_names

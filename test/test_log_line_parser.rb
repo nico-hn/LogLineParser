@@ -10,6 +10,19 @@ class TestLogLineParser < Minitest::Test
     @irregular_log_line = 'sub_domain-192-168-0-1.example.org - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "/dir/start.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @googlebot = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"'
     @mal_formed_log_line = 'some thing wrong'
+    @log_line_hash = {
+      "%h" => "192.168.3.4",
+      "%l" => "-",
+      "%u" => "quidam",
+      "%t" => "07/Feb/2016:07:39:42 +0900",
+      "%r" => "GET /index.html HTTP/1.1",
+      "%>s" => "200", "%b"=>"432",
+      "%{Referer}i" => "http://www.example.org/start.html",
+      "%{User-agent}i" => "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0",
+      "%m" => "GET",
+      "%H" => "HTTP/1.1",
+      "%U%q" => "/index.html"
+    }
   end
 
   def test_that_it_has_a_version_number
@@ -102,6 +115,11 @@ class TestLogLineParser < Minitest::Test
     expected = ["192.168.3.4", "-", "-", "time string", "-", "string \tvalue", "-"]
     result = LogLineParser.parse(line).to_a
     assert_equal(expected, result)
+  end
+
+  def test_log_line_node_stack_to_hash
+    h = LogLineParser.parse(@log_line).to_hash
+    assert_equal(@log_line_hash, h)
   end
 
   def test_common_log_record
