@@ -11,6 +11,7 @@ class TestLogLineParserQuery < Minitest::Test
     @log_line2 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org/" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line3 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line4 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org/subdir/" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
+    @log_line5 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org/subdir/example.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
   end
 
   def test_referred_from_resources?
@@ -21,5 +22,19 @@ class TestLogLineParserQuery < Minitest::Test
     assert_equal(true, query.referred_from_resources?(record))
     assert_equal(true, query_without_domain.referred_from_resources?(record))
     assert_equal(false, query.referred_from_resources?(record2))
+  end
+
+  def test_referred_from_under_resources?
+    record = CombinedLogRecord.parse(@log_line)
+    record3 = CombinedLogRecord.parse(@log_line3)
+    record4 = CombinedLogRecord.parse(@log_line4)
+    record5 = CombinedLogRecord.parse(@log_line5)
+    query = Query.new(domain: "www.example.org", resources: ["/subdir/"])
+    query2 = Query.new(domain: "www.example.org", resources: ["/"])
+    assert_equal(false, query.referred_from_under_resources?(record))
+    assert_equal(true, query.referred_from_under_resources?(record4))
+    assert_equal(true, query.referred_from_under_resources?(record5))
+    assert_equal(true, query2.referred_from_under_resources?(record3))
+    assert_equal(true, query2.referred_from_under_resources?(record5))
   end
 end
