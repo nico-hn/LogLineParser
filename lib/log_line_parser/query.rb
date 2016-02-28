@@ -30,6 +30,12 @@ module LogLineParser
       @normalized_resources.include?(record.resource)
     end
 
+    def access_to_under_resources?(record)
+      resource = record.resource
+      @normalized_dirs.include?(resource) or
+        @resources.any? {|target| resource.start_with?(target) }
+    end
+
     private
 
     def if_matching_domain(record)
