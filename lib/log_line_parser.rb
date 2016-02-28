@@ -64,13 +64,7 @@ module LogLineParser
     end
 
     def to_hash(record_type=CombinedLogRecord)
-      values = to_a
-      h = {}
-      record_type.format_strings.each_with_index do |key, i|
-        h[key] = values[i]
-      end
-      record_type.parse_request(h)
-      h
+      record_type.to_hash(to_a)
     end
 
     def to_record(record_type=CombinedLogRecord)
@@ -110,7 +104,7 @@ module LogLineParser
     end
 
     def to_hash(line)
-      values = LogLineParser.parse(line).to_a
+      values = line.kind_of?(Array) ? line : LogLineParser.parse(line).to_a
       h = {}
       @format_strings.each_with_index do |key, i|
         h[key] = values[i]
