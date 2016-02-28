@@ -19,6 +19,13 @@ module LogLineParser
         @normalized_resources.include?(record.referer_resource)
     end
 
+    def referred_from_under_resources?(record)
+      referer_resource = record.referer_resource
+      if_matching_domain(record) and
+        @normalized_dirs.include?(referer_resource) or
+        @resources.any?{|target| referer_resource.start_with?(target) }
+    end
+
     private
 
     def if_matching_domain(record)
