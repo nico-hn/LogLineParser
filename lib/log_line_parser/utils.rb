@@ -1,28 +1,11 @@
 #!/usr/bin/env ruby
 
+require 'log_line_parser/query'
+
 module LogLineParser
   module Utils
-    DEFAULT_BOTS = %w(
-Googlebot
-Googlebot-Mobile
-Mediapartners-Google
-Bingbot
-Slurp
-Baiduspider
-BaiduImagespider
-BaiduMobaider
-YetiBot
-)
-
-    def self.compile_bots_re(bot_names=DEFAULT_BOTS)
-      bots_str = bot_names.map {|name| Regexp.escape(name) }.join("|")
-      Regexp.compile(bots_str, Regexp::IGNORECASE)
-    end
-
-    DEFAULT_BOTS_RE = compile_bots_re
-
-    def self.access_by_bots?(record, bots_re=DEFAULT_BOTS_RE)
-      bots_re =~ record.user_agent
+    def self.access_by_bots?(record, bots_re=Query::DEFAULT_BOTS_RE)
+      Query.access_by_bots?(record, bots_re)
     end
 
     def self.referred_from?(record, resources=[])
