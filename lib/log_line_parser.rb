@@ -2,6 +2,7 @@
 
 require "log_line_parser/version"
 require "log_line_parser/line_parser"
+require "log_line_parser/apache"
 require "strscan"
 require "time"
 require "date"
@@ -72,8 +73,9 @@ module LogLineParser
 
     attr_accessor :parse_time_value
 
-    def setup(field_names)
+    def setup(field_names, format_strings=nil)
       @field_names = field_names
+      @format_strings = format_strings
       @number_of_fields = field_names.length
       @referer_defined = field_names.include?(:referer)
       @parse_time_value = true
@@ -148,12 +150,24 @@ module LogLineParser
     end
   end
 
-  def self.create_record_type(field_names)
+  def self.create_record_type(field_names, format_strings)
     record_type = Struct.new(*field_names)
     record_type.extend(ClassMethods)
     record_type.include(InstanceMethods)
-    record_type.setup(field_names)
+    record_type.setup(field_names, format_strings)
     record_type
+  end
+
+  def self.parser(log_format)
+    if log_format.kind_of? String
+      format_strings = Apache.parse_log_format(log_format)
+      field_names = Apache.format_strings_to_symbols(format_strings)
+    else
+      format_strings = nil
+      field_names = log_format
+    end
+
+    create_record_type(field_names, format_strings)
   end
 
   def self.parse(line)
@@ -167,8 +181,8 @@ module LogLineParser
     # LogLineTokenizer.tokenize(line.chomp, stack)
   end
 
-  CommonLogRecord = create_record_type(Fields::COMMON)
-  CombinedLogRecord = create_record_type(Fields::COMBINED)
+  CommonLogRecord = parser(Apache::LogFormat::COMMON)
+  CombinedLogRecord = parser(Apache::LogFormat::COMBINED)
 
   def self.each_record(record_type: CommonLogRecord,
                        input: ARGF,
