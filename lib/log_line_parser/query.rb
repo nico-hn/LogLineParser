@@ -14,7 +14,17 @@ module LogLineParser
       @normalized_dirs = @normalized_resources - @resources
     end
 
+    def referred_from_resources?(record)
+      if_matching_domain(record) and
+        @normalized_resources.include?(record.referer_resource)
+    end
+
     private
+
+    def if_matching_domain(record)
+      # When @domain is not set, it should be ignored.
+      not @domain or @domain == record.referer_host
+    end
 
     def normalize_resources(resources)
       [].tap do |normalized|
