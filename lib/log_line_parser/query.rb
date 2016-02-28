@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-#!/usr/bin/env ruby
-
 module LogLineParser
   class Query
     TAIL_SLASH_RE = /\/$/
