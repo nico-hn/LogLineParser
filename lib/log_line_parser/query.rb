@@ -26,6 +26,10 @@ module LogLineParser
         @resources.any?{|target| referer_resource.start_with?(target) }
     end
 
+    def access_to_resources?(record)
+      @normalized_resources.include?(record.resource)
+    end
+
     private
 
     def if_matching_domain(record)
