@@ -48,4 +48,18 @@ class TestLogLineParserQuery < Minitest::Test
     assert_equal(false, query2.access_to_resources?(record))
     assert_equal(true, query3.access_to_resources?(record3))
   end
+
+  def test_access_to_under_resources?
+    record = CombinedLogRecord.parse(@log_line)
+    record3 = CombinedLogRecord.parse(@log_line3)
+    query = Query.new(domain: "www.example.org", resources: ["/"])
+    query2 = Query.new(domain: "www.example.org", resources: ["/non-existent.html"])
+    query3 = Query.new(domain: "www.example.org", resources: ["/subdir/"])
+    assert_equal(true, query.access_to_under_resources?(record))
+    assert_equal(false, query2.access_to_under_resources?(record))
+    assert_equal(false, query2.access_to_under_resources?(record3))
+    assert_equal(true, query.access_to_under_resources?(record3))
+    assert_equal(false, query3.access_to_under_resources?(record))
+    assert_equal(true, query3.access_to_under_resources?(record3))
+  end
 end
