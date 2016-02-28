@@ -4,6 +4,8 @@ require 'log_line_parser'
 require 'log_line_parser/utils'
 
 module LogLineParser
-  MoeLogRecord = create_record_type(Fields::COMBINED + [:time_taken_us])
+  # CombinedLogFormat + "%D"
+  MoeLogFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\" %D"
+  MoeLogRecord = parser(MoeLogFormat)
 end
 
