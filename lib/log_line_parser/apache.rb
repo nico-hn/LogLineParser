@@ -12,6 +12,7 @@ As explained in http://httpd.apache.org/docs/current/logs.html:
 
     module LogFormat
       COMMON = "%h %l %u %t \"%r\" %>s %b"
+      COMMON_WITH_VH = "%v %h %l %u %t \"%r\" %>s %b"
       COMBINED = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\""
     end
 
@@ -54,7 +55,7 @@ As explained in http://httpd.apache.org/docs/current/logs.html:
       "%u" => :remote_user,
       "%U" => :url_path,
       "%U%q" => :resource,
-      "%v" => :server_name,
+      "%v" => :virtual_host,
       "%V" => :server_name2,
       "%X" => :connection_status,
       "%I" => :received_bytes_including_headers,
