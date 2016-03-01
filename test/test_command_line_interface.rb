@@ -2,6 +2,11 @@
 
 require 'minitest_helper'
 require 'log_line_parser/command_line_interface'
+require 'shellwords'
+
+def setup_argv(command_lin_str)
+  ARGV.replace Shellwords.split(command_lin_str)
+end
 
 class TestLogLineParser < Minitest::Test
   include LogLineParser
@@ -38,5 +43,12 @@ expected_result = [
 
     parsed_result = CommandLineInterFace.read_configs(yaml_data)
     assert_equal(expected_result, parsed_result)
+  end
+
+  def test_parse_options
+    setup_argv("--config=config.yaml")
+    opts = CommandLineInterFace.parse_options
+    expected_result =  { :config_file => "config.yaml" }
+    assert_equal(expected_result, opts)
   end
 end
