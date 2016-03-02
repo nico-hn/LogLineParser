@@ -58,16 +58,26 @@ YetiBot
         queries = option[ConfigFields::QUERIES]
         log_name = option[ConfigFields::OUTPUT_LOG_NAME]
         if option[ConfigFields::QUERY_TYPE] == "all".freeze
-          proc do |line, record|
-            if queries.all? {|method| query.send(method, record) }
-              logs[log_name].print line
-            end
-          end
+          log_if_all_match(logs, query, queries, log_name)
         else
-          proc do |line, record|
-            if queries.any? {|method| query.send(method, record) }
-              logs[log_name].print line
-            end
+          log_if_any_match(logs, query, queries, log_name)
+        end
+      end
+
+      private
+
+      def log_if_all_match(logs, query, queries, log_name)
+        proc do |line, record|
+          if queries.all? {|method| query.send(method, record) }
+            logs[log_name].print line
+          end
+        end
+      end
+
+      def log_if_any_match(logs, query, queries, log_name)
+        proc do |line, record|
+          if queries.any? {|method| query.send(method, record) }
+            logs[log_name].print line
           end
         end
       end
