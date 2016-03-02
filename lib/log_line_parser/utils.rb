@@ -8,22 +8,6 @@ module LogLineParser
       Query.access_by_bots?(record, bots_re)
     end
 
-    def self.referred_from?(record, resources=[])
-      Query.referred_from?(record, resources)
-    end
-
-    def self.referred_from_under?(record, path)
-      Query.referred_from_under?(record, path)
-    end
-
-    def self.access_to_resources?(record, resources=[])
-      Query.access_to_resources?(record, resources)
-    end
-
-    def self.access_to_resources_under?(record, path)
-      Query.access_to_resources_under?(record, path)
-    end
-
     def self.open_multiple_output_files(base_names, dir=nil, ext="log")
       logs = {}
       filepath = dir ? File.join(dir, "%s.#{ext}") : "%s.#{ext}"

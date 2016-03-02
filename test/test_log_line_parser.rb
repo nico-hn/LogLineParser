@@ -216,30 +216,4 @@ class TestLogLineParser < Minitest::Test
     assert(LogLineParser::Utils.access_by_bots?(bot_record))
     assert_nil(LogLineParser::Utils.access_by_bots?(normal_record))
   end
-
-  def test_utils_referred_from
-    record = LogLineParser::CombinedLogRecord.parse(@log_line)
-    assert_equal(true, LogLineParser::Utils.referred_from?(record, ["/start.html"]))
-    assert_equal(false, LogLineParser::Utils.referred_from?(record, ["/non-existent.html"]))
-  end
-
-  def test_utils_referred_from_under
-    record = LogLineParser::CombinedLogRecord.parse(@log_line4)
-    assert_equal(true, LogLineParser::Utils.referred_from_under?(record, "/"))
-    assert_equal(true, LogLineParser::Utils.referred_from_under?(record, "/subdir/"))
-    assert_equal(false, LogLineParser::Utils.referred_from_under?(record, "/non-existent/"))
-  end
-
-  def test_utils_access_to_resources
-    record = LogLineParser::CombinedLogRecord.parse(@log_line)
-    assert_equal(true, LogLineParser::Utils.access_to_resources?(record, ["/index.html"]))
-    assert_equal(false, LogLineParser::Utils.access_to_resources?(record, ["/start.html"]))
-  end
-
-  def test_utils_access_to_resources_under
-    record = LogLineParser::CombinedLogRecord.parse(@log_line3)
-    assert_equal(true, LogLineParser::Utils.access_to_resources_under?(record, "/subdir/"))
-    assert_equal(true, LogLineParser::Utils.access_to_resources_under?(record, "/"))
-    assert_equal(false, LogLineParser::Utils.access_to_resources_under?(record, "/non-existent"))
-  end
 end
