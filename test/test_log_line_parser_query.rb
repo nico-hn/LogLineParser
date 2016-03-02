@@ -98,33 +98,35 @@ class TestLogLineParserQuery < Minitest::Test
   end
 
   def test_query_register_query_to_log
-    option = {
+    option_any = {
       "host_name" => "www.example.org",
       "resources" => [
         "/start.html",
         "/subdir/index.html"
       ],
       "queries" => [:access_to_resources?, :referred_from_resources?],
-      "output_log_name" => "log_file",
+      "output_log_name" => "log_file_any",
       "query_type" => "any"
     }
 
-    logs = {}
-    logs["log_file"] = StringIO.new(String.new, "w")
-    query_log = Query.register_query_to_log(option, logs)
-    [@log_line, @log_line4].each do |line|
-      record = LogLineParser::CombinedLogRecord.parse(line)
-      query_log.call(line, record)
-    end
-    assert_equal(@log_line + @log_line4, logs["log_file"].string)
+    option_all = option_any.dup
+    option_all["query_type"] = "all"
+    option_all["output_log_name"] = "log_file_all"
 
-    option["query_type"] = "all"
-    logs["log_file"] = StringIO.new(String.new, "w")
-    query_log = Query.register_query_to_log(option, logs)
+    logs = {}
+    logs["log_file_any"] = StringIO.new(String.new, "w")
+    logs["log_file_all"] = StringIO.new(String.new, "w")
+
+    query_log_any = Query.register_query_to_log(option_any, logs)
+    query_log_all = Query.register_query_to_log(option_all, logs)
+
     [@log_line, @log_line4].each do |line|
       record = LogLineParser::CombinedLogRecord.parse(line)
-      query_log.call(line, record)
+      query_log_any.call(line, record)
+      query_log_all.call(line, record)
     end
-    assert_equal("", logs["log_file"].string)
+
+    assert_equal(@log_line + @log_line4, logs["log_file_any"].string)
+    assert_equal("", logs["log_file_all"].string)
   end
 end
