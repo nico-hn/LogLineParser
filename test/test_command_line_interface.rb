@@ -3,6 +3,7 @@
 require 'minitest_helper'
 require 'log_line_parser/command_line_interface'
 require 'shellwords'
+require 'stringio'
 
 def setup_argv(command_lin_str)
   ARGV.replace Shellwords.split(command_lin_str)

@@ -96,4 +96,35 @@ class TestLogLineParserQuery < Minitest::Test
     assert_equal(true, Query.access_to_resources_under?(record, "/"))
     assert_equal(false, Query.access_to_resources_under?(record, "/non-existent"))
   end
+
+  def test_query_register_query_to_log
+    option = {
+      "host_name" => "www.example.org",
+      "resources" => [
+        "/start.html",
+        "/subdir/index.html"
+      ],
+      "queries" => [:access_to_resources?, :referred_from_resources?],
+      "output_log_name" => "log_file",
+      "query_type" => "any"
+    }
+
+    logs = {}
+    logs["log_file"] = StringIO.new(String.new, "w")
+    query_log = Query.register_query_to_log(option, logs)
+    [@log_line, @log_line4].each do |line|
+      record = LogLineParser::CombinedLogRecord.parse(line)
+      query_log.call(line, record)
+    end
+    assert_equal(@log_line + @log_line4, logs["log_file"].string)
+
+    option["query_type"] = "all"
+    logs["log_file"] = StringIO.new(String.new, "w")
+    query_log = Query.register_query_to_log(option, logs)
+    [@log_line, @log_line4].each do |line|
+      record = LogLineParser::CombinedLogRecord.parse(line)
+      query_log.call(line, record)
+    end
+    assert_equal("", logs["log_file"].string)
+  end
 end

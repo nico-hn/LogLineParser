@@ -16,6 +16,14 @@ BaiduMobaider
 YetiBot
 )
 
+    module ConfigFields
+      HOST_NAME = "host_name"
+      RESOURCES = "resources"
+      QUERIES = "queries"
+      OUTPUT_LOG_NAME = "output_log_name"
+      QUERY_TYPE = "query_type" # The value should be "all" or "any".
+    end
+
     def self.compile_bots_re(bot_names=DEFAULT_BOTS)
       bots_str = bot_names.map {|name| Regexp.escape(name) }.join("|")
       Regexp.compile(bots_str, Regexp::IGNORECASE)
@@ -41,6 +49,26 @@ YetiBot
 
     def self.access_to_resources_under?(record, path)
       record.resource.start_with?(path)
+    end
+
+    def self.register_query_to_log(option, logs)
+      query = Query.new(domain: option[ConfigFields::HOST_NAME],
+                        resources: option[ConfigFields::RESOURCES])
+      queries = option[ConfigFields::QUERIES]
+      log_name = option[ConfigFields::OUTPUT_LOG_NAME]
+      if option[ConfigFields::QUERY_TYPE] == "all".freeze
+        proc do |line, record|
+          if queries.all? {|method| query.send(method, record) }
+            logs[log_name].print line
+          end
+        end
+      else
+        proc do |line, record|
+          if queries.any? {|method| query.send(method, record) }
+            logs[log_name].print line
+          end
+        end
+      end
     end
 
     def initialize(domain: nil, resources: [])
