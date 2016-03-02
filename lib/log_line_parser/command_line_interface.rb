@@ -28,5 +28,11 @@ module LogLineParser
 
       options
     end
+
+    def self.load_config_file(config_file)
+      open(File.expand_path(config_file)) do |f|
+        read_configs(f.read)
+      end
+    end
   end
 end
