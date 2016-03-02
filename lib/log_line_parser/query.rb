@@ -27,6 +27,22 @@ YetiBot
       bots_re =~ record.user_agent
     end
 
+    def self.referred_from?(record, resources=[])
+      resources.include?(record.referer_resource)
+    end
+
+    def self.referred_from_under?(record, path)
+        record.referer_resource.start_with?(path)
+    end
+
+    def self.access_to_resources?(record, resources=[])
+      resources.include?(record.resource)
+    end
+
+    def self.access_to_resources_under?(record, path)
+      record.resource.start_with?(path)
+    end
+
     def initialize(domain: nil, resources: [])
       @domain = domain
       @resources = normalize_resources(resources)

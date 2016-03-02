@@ -9,19 +9,19 @@ module LogLineParser
     end
 
     def self.referred_from?(record, resources=[])
-      resources.include?(record.referer_resource)
+      Query.referred_from?(record, resources)
     end
 
     def self.referred_from_under?(record, path)
-        record.referer_resource.start_with?(path)
+      Query.referred_from_under?(record, path)
     end
 
     def self.access_to_resources?(record, resources=[])
-      resources.include?(record.resource)
+      Query.access_to_resources?(record, resources)
     end
 
     def self.access_to_resources_under?(record, path)
-      record.resource.start_with?(path)
+      Query.access_to_resources_under?(record, path)
     end
 
     def self.open_multiple_output_files(base_names, dir=nil, ext="log")
