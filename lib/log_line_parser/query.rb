@@ -124,6 +124,10 @@ YetiBot
       record.last_request_status == 206
     end
 
+    def status_code_304?(record)
+      record.last_request_status == 304
+    end
+
     private
 
     def if_matching_domain(record)
