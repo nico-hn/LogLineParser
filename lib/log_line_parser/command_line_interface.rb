@@ -13,12 +13,12 @@ module LogLineParser
       options = {}
 
       OptionParser.new("USAGE: #{File.basename($0)} [OPTION]... [LOG_FILE]...") do |opt|
-        opt.on("-f [config_file]", "--filter [=config_file]",
+        opt.on("-c [config_file]", "--config [=config_file]",
                "Give a configuration file in yaml format") do |config_file|
           options[:config_file] = config_file
         end
 
-        opt.on("-c [format]", "--convert [=format]",
+        opt.on("-t [format]", "--to [=format]",
                "Specify a format") do |format|
           options[:format] = format
         end

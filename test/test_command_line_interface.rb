@@ -47,12 +47,12 @@ expected_result = [
   end
 
   def test_parse_options
-    setup_argv("--filter=config.yaml")
+    setup_argv("--config=config.yaml")
     opts = CommandLineInterFace.parse_options
     expected_result =  { :config_file => "config.yaml" }
     assert_equal(expected_result, opts)
 
-    setup_argv("--convert=csv")
+    setup_argv("--to=csv")
     opts = CommandLineInterFace.parse_options
     expected_result =  { :format => "csv" }
     assert_equal(expected_result, opts)
