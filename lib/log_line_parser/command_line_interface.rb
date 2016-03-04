@@ -18,6 +18,11 @@ module LogLineParser
           options[:config_file] = config_file
         end
 
+        opt.on("-f", "--filter-mode",
+               "Mode for choosing log records that satisfy certain criteria") do
+          options[:filter_mode] = true
+        end
+
         opt.on("-t [format]", "--to [=format]",
                "Specify a format") do |format|
           options[:format] = format
