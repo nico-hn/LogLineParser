@@ -12,6 +12,7 @@ class TestLogLineParserQuery < Minitest::Test
     @log_line3 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line4 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org/subdir/" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line5 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org/subdir/example.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
+    @log_line6 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/non-existent.html HTTP/1.1" 404 432 "http://www.example.org/subdir/example.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @googlebot = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"'
   end
 
@@ -62,6 +63,14 @@ class TestLogLineParserQuery < Minitest::Test
     assert_equal(true, query.access_to_under_resources?(record3))
     assert_equal(false, query3.access_to_under_resources?(record))
     assert_equal(true, query3.access_to_under_resources?(record3))
+  end
+
+  def test_status_code_404?
+    record = LogLineParser::CombinedLogRecord.parse(@log_line)
+    record6 = LogLineParser::CombinedLogRecord.parse(@log_line6)
+    query = Query.new(domain: "www.example.org", resources: ["/subdir/non-existent.html"])
+    assert_equal(false, query.status_code_404?(record))
+    assert_equal(true, query.status_code_404?(record6))
   end
 
   def test_access_by_bots?
