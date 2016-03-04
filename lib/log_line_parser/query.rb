@@ -112,20 +112,20 @@ YetiBot
         @resources.any? {|target| resource.start_with?(target) }
     end
 
-    def status_code_404?(record)
-      record.last_request_status == 404
+    def status_code_206?(record)
+      record.last_request_status == 206
     end
 
     def status_code_301?(record)
       record.last_request_status == 301
     end
 
-    def status_code_206?(record)
-      record.last_request_status == 206
-    end
-
     def status_code_304?(record)
       record.last_request_status == 304
+    end
+
+    def status_code_404?(record)
+      record.last_request_status == 404
     end
 
     private
