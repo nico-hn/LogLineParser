@@ -112,6 +112,10 @@ YetiBot
         @resources.any? {|target| resource.start_with?(target) }
     end
 
+    def status_code_404?(record)
+      record.last_request_status == 404
+    end
+
     private
 
     def if_matching_domain(record)
