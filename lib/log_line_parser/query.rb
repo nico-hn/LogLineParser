@@ -116,6 +116,10 @@ YetiBot
       record.last_request_status == 404
     end
 
+    def status_code_301?(record)
+      record.last_request_status == 301
+    end
+
     private
 
     def if_matching_domain(record)
