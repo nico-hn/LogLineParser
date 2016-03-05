@@ -74,4 +74,15 @@ expected_result = [
     log_format = CommandLineInterFace.choose_log_format(opts)
     assert_equal(CommonLogWithVHRecord, log_format)
   end
+
+  def test_execute_as_converter_to_csv
+    setup_argv("--to=csv")
+    opts = CommandLineInterFace.parse_options
+    output = StringIO.new(String.new, "w")
+    expected_csv = File.read("test/data/expected_combined_log.csv")
+    CommandLineInterFace.execute_as_converter(opts,
+                                              output,
+                                              open("test/data/example_combined_log.log"))
+    assert_equal(expected_csv, output.string)
+  end
 end

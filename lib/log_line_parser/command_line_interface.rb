@@ -3,9 +3,14 @@
 require 'yaml'
 require 'optparse'
 require 'log_line_parser'
+require 'log_line_parser/utils'
 
 module LogLineParser
   module CommandLineInterFace
+    class UnsupportedFormatError < StandardError; end
+
+    DEFAULT_FORMAT = "csv"
+
     def self.read_configs(config)
       YAML.load_stream(config).to_a
     end
@@ -51,6 +56,22 @@ module LogLineParser
       return LogLineParser::CombinedLogRecord unless format_str
       log_record = LogLineParser::PREDEFINED_FORMATS[format_str]
       log_record || LogLineParser.parser(format_str)
+    end
+
+    def self.execute_as_converter(options, output=STDOUT, input=ARGF)
+      output_format = options[:format] || DEFAULT_FORMAT
+      case output_format
+      when DEFAULT_FORMAT
+        input.each_line do |line|
+          output.print Utils.to_csv(line.chomp)
+        end
+      when "tsv"
+        input.each_line do |line|
+          output.puts Utils.to_tsv(line.chomp)
+        end
+      else
+        raise UnsupportedFormatError.new(output_format)
+      end
     end
   end
 end
