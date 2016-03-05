@@ -58,21 +58,21 @@ expected_result = [
     assert_equal(expected_result, opts)
   end
 
-  def test_choose_log_format
+  def test_choose_log_parser
     setup_argv("--log_format=common")
     opts = CommandLineInterFace.parse_options
-    log_format = CommandLineInterFace.choose_log_format(opts)
-    assert_equal(CommonLogRecord, log_format)
+    parser = CommandLineInterFace.choose_log_parser(opts[:log_format])
+    assert_equal(CommonLogRecord, parser)
 
     setup_argv("--to=csv")
     opts = CommandLineInterFace.parse_options
-    log_format = CommandLineInterFace.choose_log_format(opts)
-    assert_equal(CombinedLogRecord, log_format)
+    parser = CommandLineInterFace.choose_log_parser(opts[:log_format])
+    assert_equal(CombinedLogRecord, parser)
 
     setup_argv("--log_format=common_with_vh")
     opts = CommandLineInterFace.parse_options
-    log_format = CommandLineInterFace.choose_log_format(opts)
-    assert_equal(CommonLogWithVHRecord, log_format)
+    parser = CommandLineInterFace.choose_log_parser(opts[:log_format])
+    assert_equal(CommonLogWithVHRecord, parser)
   end
 
   def test_execute_as_converter_to_csv

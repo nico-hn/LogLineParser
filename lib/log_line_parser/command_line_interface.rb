@@ -51,11 +51,10 @@ module LogLineParser
       end
     end
 
-    def self.choose_log_format(options)
-      format_str = options[:log_format]
-      return LogLineParser::CombinedLogRecord unless format_str
-      log_record = LogLineParser::PREDEFINED_FORMATS[format_str]
-      log_record || LogLineParser.parser(format_str)
+    def self.choose_log_parser(log_format)
+      return LogLineParser::CombinedLogRecord unless log_format
+      parser = LogLineParser::PREDEFINED_FORMATS[log_format]
+      parser || LogLineParser.parser(log_format)
     end
 
     def self.execute_as_converter(options, output=STDOUT, input=ARGF)
