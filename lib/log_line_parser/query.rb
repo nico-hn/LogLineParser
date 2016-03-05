@@ -95,17 +95,19 @@ YetiBot
       end
 
       def log_if_all_match(logs, query, queries, log_name)
+        log = logs[log_name]
         proc do |line, record|
           if queries.all? {|method| query.send(method, record) }
-            logs[log_name].print line
+            log.print line
           end
         end
       end
 
       def log_if_any_match(logs, query, queries, log_name)
+        log = logs[log_name]
         proc do |line, record|
           if queries.any? {|method| query.send(method, record) }
-            logs[log_name].print line
+            log.print line
           end
         end
       end
