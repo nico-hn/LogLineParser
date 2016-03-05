@@ -35,6 +35,11 @@ module LogLineParser
           options[:log_format] = log_format
         end
 
+        opt.on("-o [output_dir]", "--output-dir [=output_dir]",
+               "Specify the output directory for log files") do |output_dir|
+          options[:output_dir] = output_dir
+        end
+
         opt.on("-t [format]", "--to [=format]",
                "Specify a format") do |format|
           options[:format] = format
@@ -70,10 +75,11 @@ module LogLineParser
     def self.execute_as_filter(options)
       configs = load_config_file(options[:config_file])
       parser = choose_log_parser(options[:log_format])
+      output_dir = options[:output_dir]
       output_log_names = configs.map do |config|
         config[Query::ConfigFields::OUTPUT_LOG_NAME]
       end
-      Utils.open_multiple_output_files(output_log_names) do |logs|
+      Utils.open_multiple_output_files(output_log_names, output_dir) do |logs|
         queries = configs.map do |config|
           Query.register_query_to_log(config, logs)
         end
