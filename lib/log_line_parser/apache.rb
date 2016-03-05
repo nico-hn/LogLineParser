@@ -72,7 +72,9 @@ As explained in http://httpd.apache.org/docs/current/logs.html:
     end
 
     def self.format_strings_to_symbols(format_strings)
-      format_strings.map {|string| FORMAT_STRING_SYMBOLE_TABLE[string] }
+      format_strings.map do |string|
+        FORMAT_STRING_SYMBOLE_TABLE[string]||string.to_sym
+      end
     end
   end
 end
