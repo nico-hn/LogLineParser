@@ -71,11 +71,8 @@ YetiBot
         queries = option[ConfigFields::MATCH]
         reject_unacceptable_queries(queries)
         log_name = option[ConfigFields::OUTPUT_LOG_NAME]
-        if option[ConfigFields::MATCH_TYPE] == "all".freeze
-          log_if_all_match(logs, query, queries, log_name)
-        else
-          log_if_any_match(logs, query, queries, log_name)
-        end
+        match_type = option[ConfigFields::MATCH_TYPE]
+        compile_query(match_type, logs, query, queries, log_name)
       end
 
       private
@@ -110,6 +107,14 @@ YetiBot
           if queries.any? {|method| query.send(method, record) }
             logs[log_name].print line
           end
+        end
+      end
+
+      def compile_query(match_type, logs, query, queries, log_name)
+        if match_type == "all".freeze
+          log_if_all_match(logs, query, queries, log_name)
+        else
+          log_if_any_match(logs, query, queries, log_name)
         end
       end
     end
