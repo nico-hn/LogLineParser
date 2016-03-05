@@ -33,6 +33,7 @@ class TestLogLineParserUtils < Minitest::Test
 
     @log_line_tsv = "192.168.3.4\t-\tquidam\t07/Feb/2016:07:39:42 +0900\tGET /index.html HTTP/1.1\t200\t432\thttp://www.example.org/start.html\tMozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"
     @log_line_with_a_tab_inside_tsv = "192.168.3.4\t-\tquidam\t07/Feb/2016:07:39:42 +0900\tGET /index.html HTTP/1.1\t200\t432\thttp://www.example.org/start.html\tMozilla/5.0\\t(X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"
+    @log_line_csv = "192.168.3.4,-,quidam,07/Feb/2016:07:39:42 +0900,GET /index.html HTTP/1.1,200,432,http://www.example.org/start.html,Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0\n"
   end
 
   def test_utils_access_by_bots?
@@ -47,5 +48,10 @@ class TestLogLineParserUtils < Minitest::Test
     tsv_with_a_tab_inside = Utils.to_tsv(@log_line_with_a_tab_inside)
     assert_equal(@log_line_tsv, tsv)
     assert_equal(@log_line_with_a_tab_inside_tsv, tsv_with_a_tab_inside)
+  end
+
+  def test_utils_to_csv
+    csv = Utils.to_csv(@log_line)
+    assert_equal(@log_line_csv, csv)
   end
 end

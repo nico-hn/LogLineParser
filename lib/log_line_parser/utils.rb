@@ -2,6 +2,7 @@
 
 require 'log_line_parser'
 require 'log_line_parser/query'
+require 'csv'
 
 module LogLineParser
   module Utils
@@ -35,6 +36,10 @@ module LogLineParser
       LogLineParser.parse(line).to_a.map do |field|
         escape ? escape_special_chars(field) : field
       end.join(TAB)
+    end
+
+    def self.to_csv(line)
+      LogLineParser.parse(line).to_a.to_csv
     end
 
     private
