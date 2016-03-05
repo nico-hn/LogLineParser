@@ -159,6 +159,11 @@ YetiBot
       record.last_request_status == 404
     end
 
+    alias :partial_content? :status_code_206?
+    alias :moved_permanently? :status_code_301?
+    alias :not_modified? :status_code_304?
+    alias :not_found? :status_code_404?
+
     private
 
     def if_matching_domain(record)
