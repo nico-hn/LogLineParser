@@ -3,6 +3,7 @@
 require 'yaml'
 require 'optparse'
 require 'log_line_parser'
+require 'log_line_parser/query'
 require 'log_line_parser/utils'
 
 module LogLineParser
@@ -55,6 +56,22 @@ module LogLineParser
       return LogLineParser::CombinedLogRecord unless log_format
       parser = LogLineParser::PREDEFINED_FORMATS[log_format]
       parser || LogLineParser.parser(log_format)
+    end
+
+    def self.execute_as_filter(options)
+      configs = load_config_file(options[:config_file])
+      parser = choose_log_parser(options[:log_format])
+      output_log_names = configs.map do |config|
+        config[Query::ConfigFields::OUTPUT_LOG_NAME]
+      end
+      Utils.open_multiple_output_files(output_log_names) do |logs|
+        queries = configs.map do |config|
+          Query.register_query_to_log(config, logs)
+        end
+        LogLineParser.each_record(record_type: parser) do |line, record|
+          queries.each {|query| query.call(line, record) }
+        end
+      end
     end
 
     def self.execute_as_converter(options, output=STDOUT, input=ARGF)
