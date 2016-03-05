@@ -85,4 +85,15 @@ expected_result = [
                                               open("test/data/example_combined_log.log"))
     assert_equal(expected_csv, output.string)
   end
+
+  def test_execute_as_converter_to_tsv
+    setup_argv("--to=tsv")
+    opts = CommandLineInterFace.parse_options
+    output = StringIO.new(String.new, "w")
+    expected_tsv = File.read("test/data/expected_combined_log.tsv")
+    CommandLineInterFace.execute_as_converter(opts,
+                                              output,
+                                              open("test/data/example_combined_log.log"))
+    assert_equal(expected_tsv, output.string)
+  end
 end
