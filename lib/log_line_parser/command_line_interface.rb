@@ -58,6 +58,15 @@ module LogLineParser
       parser || LogLineParser.parser(log_format)
     end
 
+    def self.execute
+      options = parse_options
+      if options[:filter_mode]
+        execute_as_filter(options)
+      else
+        execute_as_converter(options)
+      end
+    end
+
     def self.execute_as_filter(options)
       configs = load_config_file(options[:config_file])
       parser = choose_log_parser(options[:log_format])
