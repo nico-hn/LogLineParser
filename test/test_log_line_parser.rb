@@ -124,7 +124,7 @@ class TestLogLineParser < Minitest::Test
   end
 
   def test_common_log_record
-    record = LogLineParser::CommonLogRecord.parse(@common_log_line)
+    record = LogLineParser::CommonLogParser.parse(@common_log_line)
     expected_last_request_status = 200
 
     assert_equal(expected_last_request_status, record.last_request_status)

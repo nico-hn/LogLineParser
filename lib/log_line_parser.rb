@@ -206,15 +206,15 @@ module LogLineParser
     # LogLineTokenizer.tokenize(line.chomp, stack)
   end
 
-  CommonLogRecord = parser(Apache::LogFormat::COMMON)
+  CommonLogParser = parser(Apache::LogFormat::COMMON)
   CommonLogWithVHRecord = parser(Apache::LogFormat::COMMON_WITH_VH)
   CombinedLogParser = parser(Apache::LogFormat::COMBINED)
 
-  PREDEFINED_FORMATS['common'] = CommonLogRecord
+  PREDEFINED_FORMATS['common'] = CommonLogParser
   PREDEFINED_FORMATS['common_with_vh'] = CommonLogWithVHRecord
   PREDEFINED_FORMATS['combined'] = CombinedLogParser
 
-  def self.each_record(record_type: CommonLogRecord,
+  def self.each_record(record_type: CommonLogParser,
                        input: ARGF,
                        error_output: STDERR)
     input.each_line do |line|

@@ -62,7 +62,7 @@ expected_result = [
     setup_argv("--log-format=common")
     opts = CommandLineInterface.parse_options
     parser = CommandLineInterface.choose_log_parser(opts[:log_format])
-    assert_equal(CommonLogRecord, parser)
+    assert_equal(CommonLogParser, parser)
 
     setup_argv("--to=csv")
     opts = CommandLineInterface.parse_options
