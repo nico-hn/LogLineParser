@@ -6,7 +6,7 @@ require 'log_line_parser'
 require 'log_line_parser/utils'
 
 module LogLineParser
-  module CommandLineInterFace
+  module CommandLineInterface
     class UnsupportedFormatError < StandardError; end
 
     DEFAULT_FORMAT = "csv"

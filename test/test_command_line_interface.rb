@@ -42,45 +42,45 @@ expected_result = [
         "queries" => [:access_to_under_resources?] }
     ]
 
-    parsed_result = CommandLineInterFace.read_configs(yaml_data)
+    parsed_result = CommandLineInterface.read_configs(yaml_data)
     assert_equal(expected_result, parsed_result)
   end
 
   def test_parse_options
     setup_argv("--config=config.yaml")
-    opts = CommandLineInterFace.parse_options
+    opts = CommandLineInterface.parse_options
     expected_result =  { :config_file => "config.yaml" }
     assert_equal(expected_result, opts)
 
     setup_argv("--to=csv")
-    opts = CommandLineInterFace.parse_options
+    opts = CommandLineInterface.parse_options
     expected_result =  { :format => "csv" }
     assert_equal(expected_result, opts)
   end
 
   def test_choose_log_parser
     setup_argv("--log_format=common")
-    opts = CommandLineInterFace.parse_options
-    parser = CommandLineInterFace.choose_log_parser(opts[:log_format])
+    opts = CommandLineInterface.parse_options
+    parser = CommandLineInterface.choose_log_parser(opts[:log_format])
     assert_equal(CommonLogRecord, parser)
 
     setup_argv("--to=csv")
-    opts = CommandLineInterFace.parse_options
-    parser = CommandLineInterFace.choose_log_parser(opts[:log_format])
+    opts = CommandLineInterface.parse_options
+    parser = CommandLineInterface.choose_log_parser(opts[:log_format])
     assert_equal(CombinedLogRecord, parser)
 
     setup_argv("--log_format=common_with_vh")
-    opts = CommandLineInterFace.parse_options
-    parser = CommandLineInterFace.choose_log_parser(opts[:log_format])
+    opts = CommandLineInterface.parse_options
+    parser = CommandLineInterface.choose_log_parser(opts[:log_format])
     assert_equal(CommonLogWithVHRecord, parser)
   end
 
   def test_execute_as_converter_to_csv
     setup_argv("--to=csv")
-    opts = CommandLineInterFace.parse_options
+    opts = CommandLineInterface.parse_options
     output = StringIO.new(String.new, "w")
     expected_csv = File.read("test/data/expected_combined_log.csv")
-    CommandLineInterFace.execute_as_converter(opts,
+    CommandLineInterface.execute_as_converter(opts,
                                               output,
                                               open("test/data/example_combined_log.log"))
     assert_equal(expected_csv, output.string)
@@ -88,10 +88,10 @@ expected_result = [
 
   def test_execute_as_converter_to_tsv
     setup_argv("--to=tsv")
-    opts = CommandLineInterFace.parse_options
+    opts = CommandLineInterface.parse_options
     output = StringIO.new(String.new, "w")
     expected_tsv = File.read("test/data/expected_combined_log.tsv")
-    CommandLineInterFace.execute_as_converter(opts,
+    CommandLineInterface.execute_as_converter(opts,
                                               output,
                                               open("test/data/example_combined_log.log"))
     assert_equal(expected_tsv, output.string)
