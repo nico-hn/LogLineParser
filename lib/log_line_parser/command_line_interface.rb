@@ -30,7 +30,7 @@ module LogLineParser
           options[:filter_mode] = true
         end
 
-        opt.on("-l [LogFormat]", "--log_format [=LogFormat]",
+        opt.on("-l [LogFormat]", "--log-format [=LogFormat]",
                "Specify LogFormat") do |log_format|
           options[:log_format] = log_format
         end

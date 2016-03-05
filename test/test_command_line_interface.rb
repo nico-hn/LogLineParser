@@ -59,7 +59,7 @@ expected_result = [
   end
 
   def test_choose_log_parser
-    setup_argv("--log_format=common")
+    setup_argv("--log-format=common")
     opts = CommandLineInterface.parse_options
     parser = CommandLineInterface.choose_log_parser(opts[:log_format])
     assert_equal(CommonLogRecord, parser)
@@ -69,7 +69,7 @@ expected_result = [
     parser = CommandLineInterface.choose_log_parser(opts[:log_format])
     assert_equal(CombinedLogRecord, parser)
 
-    setup_argv("--log_format=common_with_vh")
+    setup_argv("--log-format=common_with_vh")
     opts = CommandLineInterface.parse_options
     parser = CommandLineInterface.choose_log_parser(opts[:log_format])
     assert_equal(CommonLogWithVHRecord, parser)
