@@ -72,7 +72,7 @@ expected_result = [
     setup_argv("--log-format=common_with_vh")
     opts = CommandLineInterface.parse_options
     parser = CommandLineInterface.choose_log_parser(opts[:log_format])
-    assert_equal(CommonLogWithVHRecord, parser)
+    assert_equal(CommonLogWithVHParser, parser)
   end
 
   def test_execute_as_converter_to_csv

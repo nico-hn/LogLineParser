@@ -207,11 +207,11 @@ module LogLineParser
   end
 
   CommonLogParser = parser(Apache::LogFormat::COMMON)
-  CommonLogWithVHRecord = parser(Apache::LogFormat::COMMON_WITH_VH)
+  CommonLogWithVHParser = parser(Apache::LogFormat::COMMON_WITH_VH)
   CombinedLogParser = parser(Apache::LogFormat::COMBINED)
 
   PREDEFINED_FORMATS['common'] = CommonLogParser
-  PREDEFINED_FORMATS['common_with_vh'] = CommonLogWithVHRecord
+  PREDEFINED_FORMATS['common_with_vh'] = CommonLogWithVHParser
   PREDEFINED_FORMATS['combined'] = CombinedLogParser
 
   def self.each_record(record_type: CommonLogParser,
