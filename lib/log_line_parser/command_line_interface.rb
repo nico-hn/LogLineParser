@@ -2,6 +2,7 @@
 
 require 'yaml'
 require 'optparse'
+require 'log_line_parser'
 
 module LogLineParser
   module CommandLineInterFace
@@ -43,6 +44,13 @@ module LogLineParser
       open(File.expand_path(config_file)) do |f|
         read_configs(f.read)
       end
+    end
+
+    def self.choose_log_format(options)
+      format_str = options[:log_format]
+      return LogLineParser::CombinedLogRecord unless format_str
+      log_record = LogLineParser::PREDEFINED_FORMATS[format_str]
+      log_record || LogLineParser.parser(format_str)
     end
   end
 end
