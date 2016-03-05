@@ -118,20 +118,6 @@ YetiBot
         end
       end
 
-      def compile_query(match_type, log, query, queries, ignore_match)
-        if match_type == "all".freeze
-          if ignore_match
-            return log_if_all_match_but(log, query, queries, ignore_match)
-          end
-          log_if_all_match(log, query, queries)
-        else
-          if ignore_match
-            return log_if_any_match_but(log, query, queries, ignore_match)
-          end
-          log_if_any_match(log, query, queries)
-        end
-      end
-
       def log_if_all_match_but(log, query, queries, ignore_match)
         proc do |line, record|
           if queries.all? {|method| query.send(method, record) } and
@@ -147,6 +133,20 @@ YetiBot
               not ignore_match.any? {|method| query.send(method, record) }
             log.print line
           end
+        end
+      end
+
+      def compile_query(match_type, log, query, queries, ignore_match)
+        if match_type == "all".freeze
+          if ignore_match
+            return log_if_all_match_but(log, query, queries, ignore_match)
+          end
+          log_if_all_match(log, query, queries)
+        else
+          if ignore_match
+            return log_if_any_match_but(log, query, queries, ignore_match)
+          end
+          log_if_any_match(log, query, queries)
         end
       end
     end
