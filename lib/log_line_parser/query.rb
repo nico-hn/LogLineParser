@@ -38,6 +38,7 @@ YetiBot
       HOST_NAME = "host_name"
       RESOURCES = "resources"
       MATCH = "match"
+      IGNORE_MATCH = "ignore_match"
       OUTPUT_LOG_NAME = "output_log_name"
       MATCH_TYPE = "match_type" # The value should be "all" or "any".
     end
@@ -77,7 +78,9 @@ YetiBot
         reject_unacceptable_queries(queries)
         log_name = option[ConfigFields::OUTPUT_LOG_NAME]
         match_type = option[ConfigFields::MATCH_TYPE]
-        compile_query(match_type, logs, query, queries, log_name)
+        ignore_match = option[ConfigFields::IGNORE_MATCH]
+        reject_unacceptable_queries(ignore_match) if ignore_match
+        compile_query(match_type, logs, query, queries, ignore_match, log_name)
       end
 
       private
@@ -117,11 +120,37 @@ YetiBot
         end
       end
 
-      def compile_query(match_type, logs, query, queries, log_name)
+      def compile_query(match_type, logs, query, queries, ignore_match, log_name)
         if match_type == "all".freeze
+          if ignore_match
+            return log_if_all_match_but(logs, query, queries, ignore_match, log_name)
+          end
           log_if_all_match(logs, query, queries, log_name)
         else
+          if ignore_match
+            return log_if_any_match_but(logs, query, queries, ignore_match, log_name)
+          end
           log_if_any_match(logs, query, queries, log_name)
+        end
+      end
+
+      def log_if_all_match_but(logs, query, queries, ignore_match, log_name)
+        log = logs[log_name]
+        proc do |line, record|
+          if queries.all? {|method| query.send(method, record) } and
+              not ignore_match.any? {|method| query.send(method, record) }
+            log.print line
+          end
+        end
+      end
+
+      def log_if_any_match_but(logs, query, queries, ignore_match, log_name)
+        log = logs[log_name]
+        proc do |line, record|
+          if queries.any? {|method| query.send(method, record) } and
+              not ignore_match.any? {|method| query.send(method, record) }
+            log.print line
+          end
         end
       end
     end

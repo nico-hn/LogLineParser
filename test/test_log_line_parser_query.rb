@@ -147,6 +147,38 @@ class TestLogLineParserQuery < Minitest::Test
     assert_equal("", logs["log_file_all"].string)
   end
 
+  def test_query_register_query_to_log_with_ignore_match
+    option_any = {
+      "host_name" => "www.example.org",
+      "resources" => [
+        "/subdir/non-existent.html",
+        "/start.html",
+        "/subdir/index.html"
+      ],
+      "match" => [:access_to_resources?, :referred_from_resources?],
+      "output_log_name" => "log_file_any",
+      "match_type" => "any"
+    }
+
+    option_any_with_ignore_match = option_any.dup
+    option_any_with_ignore_match["ignore_match"] = [:not_found?]
+    option_any_with_ignore_match["output_log_name"] = "log_file_any_with_ingnore_match"
+
+
+    logs = {}
+    logs["log_file_any"] = StringIO.new(String.new, "w")
+    logs["log_file_any_with_ingnore_match"] = StringIO.new(String.new, "w")
+
+    query_log_any = Query.register_query_to_log(option_any, logs)
+    query_log_any_with_ignore_match = Query.register_query_to_log(option_any_with_ignore_match, logs)
+
+    record = LogLineParser::CombinedLogRecord.parse(@log_line6)
+    query_log_any.call(@log_line6, record)
+    query_log_any_with_ignore_match.call(@log_line6, record)
+    assert_equal(@log_line6, logs["log_file_any"].string)
+    assert_equal("", logs["log_file_any_with_ingnore_match"].string)
+  end
+
   def test_not_allowable_method_error
     option_any = {
       "host_name" => "www.example.org",
