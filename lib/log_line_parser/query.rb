@@ -121,6 +121,10 @@ YetiBot
       @normalized_dirs = @normalized_resources - @resources
     end
 
+    def access_by_bots?(record, bots_re=DEFAULT_BOTS_RE)
+      bots_re =~ record.user_agent
+    end
+
     def referred_from_resources?(record)
       if_matching_domain(record) and
         @normalized_resources.include?(record.referer_resource)
