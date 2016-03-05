@@ -76,11 +76,11 @@ YetiBot
                           resources: option[ConfigFields::RESOURCES])
         queries = option[ConfigFields::MATCH]
         reject_unacceptable_queries(queries)
-        log_name = option[ConfigFields::OUTPUT_LOG_NAME]
+        log = logs[option[ConfigFields::OUTPUT_LOG_NAME]]
         match_type = option[ConfigFields::MATCH_TYPE]
         ignore_match = option[ConfigFields::IGNORE_MATCH]
         reject_unacceptable_queries(ignore_match) if ignore_match
-        compile_query(match_type, logs, query, queries, ignore_match, log_name)
+        compile_query(match_type, log, query, queries, ignore_match)
       end
 
       private
@@ -102,8 +102,7 @@ YetiBot
         end
       end
 
-      def log_if_all_match(logs, query, queries, log_name)
-        log = logs[log_name]
+      def log_if_all_match(log, query, queries)
         proc do |line, record|
           if queries.all? {|method| query.send(method, record) }
             log.print line
@@ -111,8 +110,7 @@ YetiBot
         end
       end
 
-      def log_if_any_match(logs, query, queries, log_name)
-        log = logs[log_name]
+      def log_if_any_match(log, query, queries)
         proc do |line, record|
           if queries.any? {|method| query.send(method, record) }
             log.print line
@@ -120,22 +118,21 @@ YetiBot
         end
       end
 
-      def compile_query(match_type, logs, query, queries, ignore_match, log_name)
+      def compile_query(match_type, log, query, queries, ignore_match)
         if match_type == "all".freeze
           if ignore_match
-            return log_if_all_match_but(logs, query, queries, ignore_match, log_name)
+            return log_if_all_match_but(log, query, queries, ignore_match)
           end
-          log_if_all_match(logs, query, queries, log_name)
+          log_if_all_match(log, query, queries)
         else
           if ignore_match
-            return log_if_any_match_but(logs, query, queries, ignore_match, log_name)
+            return log_if_any_match_but(log, query, queries, ignore_match)
           end
-          log_if_any_match(logs, query, queries, log_name)
+          log_if_any_match(log, query, queries)
         end
       end
 
-      def log_if_all_match_but(logs, query, queries, ignore_match, log_name)
-        log = logs[log_name]
+      def log_if_all_match_but(log, query, queries, ignore_match)
         proc do |line, record|
           if queries.all? {|method| query.send(method, record) } and
               not ignore_match.any? {|method| query.send(method, record) }
@@ -144,8 +141,7 @@ YetiBot
         end
       end
 
-      def log_if_any_match_but(logs, query, queries, ignore_match, log_name)
-        log = logs[log_name]
+      def log_if_any_match_but(log, query, queries, ignore_match)
         proc do |line, record|
           if queries.any? {|method| query.send(method, record) } and
               not ignore_match.any? {|method| query.send(method, record) }
