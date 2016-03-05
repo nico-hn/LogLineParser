@@ -29,6 +29,8 @@ module LogLineParser
     COMBINED = (COMMON + [:referer, :user_agent]).freeze
   end
 
+  PREDEFINED_FORMATS = {}
+
   class LogLineTokenizer < Tokenizer
     setup(%w([ ] - \\ "), ['\s+']) #"
   end
@@ -207,6 +209,10 @@ module LogLineParser
   CommonLogRecord = parser(Apache::LogFormat::COMMON)
   CommonLogWithVHRecord = parser(Apache::LogFormat::COMMON_WITH_VH)
   CombinedLogRecord = parser(Apache::LogFormat::COMBINED)
+
+  PREDEFINED_FORMATS['common'] = CommonLogRecord
+  PREDEFINED_FORMATS['common_with_vh'] = CommonLogWithVHRecord
+  PREDEFINED_FORMATS['combined'] = CombinedLogRecord
 
   def self.each_record(record_type: CommonLogRecord,
                        input: ARGF,
