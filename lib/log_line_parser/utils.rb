@@ -1,9 +1,19 @@
 #!/usr/bin/env ruby
 
+require 'log_line_parser'
 require 'log_line_parser/query'
 
 module LogLineParser
   module Utils
+    TAB = "\t"
+    SPECIAL_CHARS = {
+      "\t" => '\\t',
+      "\n" => '\\n',
+      "\r" => '\\r',
+      '\\\\' => '\\\\',
+    }
+    SPECIAL_CHARS_RE = Regexp.compile(SPECIAL_CHARS.keys.join("|"))
+
     def self.access_by_bots?(record, bots_re=Query::DEFAULT_BOTS_RE)
       Query.access_by_bots?(record, bots_re)
     end
@@ -18,6 +28,20 @@ module LogLineParser
     ensure
       logs.each do |k, v|
         v.close
+      end
+    end
+
+    def self.to_tsv(line, escape=true)
+      LogLineParser.parse(line).to_a.map do |field|
+        escape ? escape_special_chars(field) : field
+      end.join(TAB)
+    end
+
+    private
+
+    def self.escape_special_chars(field)
+      field.gsub(SPECIAL_CHARS_RE) do |char|
+        SPECIAL_CHARS[char]
       end
     end
   end
