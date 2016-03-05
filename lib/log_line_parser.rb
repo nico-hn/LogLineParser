@@ -219,7 +219,7 @@ module LogLineParser
                        error_output: STDERR)
     input.each_line do |line|
       begin
-        yield record_type.parse(line)
+        yield line, record_type.parse(line)
       rescue MalFormedRecordError => e
         error_output.print e.message
       end
