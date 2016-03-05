@@ -84,7 +84,7 @@ module LogLineParser
       @format_strings = format_strings
       @number_of_fields = field_names.length
       @referer_defined = field_names.include?(:referer)
-      @parse_time_value = true
+      @parse_time_value = false
     end
 
     def parse(line)
