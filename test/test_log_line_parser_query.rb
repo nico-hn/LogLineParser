@@ -123,11 +123,11 @@ class TestLogLineParserQuery < Minitest::Test
       ],
       "queries" => [:access_to_resources?, :referred_from_resources?],
       "output_log_name" => "log_file_any",
-      "query_type" => "any"
+      "match_type" => "any"
     }
 
     option_all = option_any.dup
-    option_all["query_type"] = "all"
+    option_all["match_type"] = "all"
     option_all["output_log_name"] = "log_file_all"
 
     logs = {}
@@ -156,7 +156,7 @@ class TestLogLineParserQuery < Minitest::Test
       ],
       "queries" => [:access_to_resources?, :referred_from_resources?, :unknown_query],
       "output_log_name" => "log_file_any",
-      "query_type" => "any"
+      "match_type" => "any"
     }
 
     logs = { "log_file_any" =>  StringIO.new(String.new, "w") }

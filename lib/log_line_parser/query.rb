@@ -34,7 +34,7 @@ YetiBot
       RESOURCES = "resources"
       QUERIES = "queries"
       OUTPUT_LOG_NAME = "output_log_name"
-      QUERY_TYPE = "query_type" # The value should be "all" or "any".
+      MATCH_TYPE = "match_type" # The value should be "all" or "any".
     end
 
     def self.compile_bots_re(bot_names=DEFAULT_BOTS)
@@ -71,7 +71,7 @@ YetiBot
         queries = option[ConfigFields::QUERIES]
         reject_unacceptable_queries(queries)
         log_name = option[ConfigFields::OUTPUT_LOG_NAME]
-        if option[ConfigFields::QUERY_TYPE] == "all".freeze
+        if option[ConfigFields::MATCH_TYPE] == "all".freeze
           log_if_all_match(logs, query, queries, log_name)
         else
           log_if_any_match(logs, query, queries, log_name)
