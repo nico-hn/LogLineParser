@@ -61,15 +61,25 @@ module LogLineParser
       output_format = options[:format] || DEFAULT_FORMAT
       case output_format
       when DEFAULT_FORMAT
-        input.each_line do |line|
-          output.print Utils.to_csv(line.chomp)
-        end
+        convert_to_csv(input, output)
       when "tsv"
-        input.each_line do |line|
-          output.puts Utils.to_tsv(line.chomp)
-        end
+        convert_to_tsv(input, output)
       else
         raise UnsupportedFormatError.new(output_format)
+      end
+    end
+
+    private
+
+    def self.convert_to_csv(input, output)
+      input.each_line do |line|
+        output.print Utils.to_csv(line.chomp)
+      end
+    end
+
+    def self.convert_to_tsv(input, output)
+      input.each_line do |line|
+        output.puts Utils.to_tsv(line.chomp)
       end
     end
   end
