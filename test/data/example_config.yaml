@@ -1,0 +1,16 @@
+---
+host_name: www.example.org
+resources:
+ - /start.html
+ - /subdir/index.html
+match:
+ - :access_to_resources?
+ - :referred_from_resources?
+output_log_name: start_or_subidir-index
+---
+host_name: www.example.net
+resources:
+ - /index.html
+match:
+ - :access_to_under_resources?
+output_log_name: to_and_from_index
