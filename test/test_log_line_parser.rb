@@ -209,11 +209,4 @@ class TestLogLineParser < Minitest::Test
 
     assert_equal(@mal_formed_log_line, err.message)
   end
-
-  def test_utils_access_by_bots
-    bot_record = LogLineParser::CombinedLogRecord.parse(@googlebot)
-    normal_record = LogLineParser::CombinedLogRecord.parse(@log_line)
-    assert(LogLineParser::Utils.access_by_bots?(bot_record))
-    assert_nil(LogLineParser::Utils.access_by_bots?(normal_record))
-  end
 end
