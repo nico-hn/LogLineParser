@@ -19,6 +19,7 @@ YetiBot
 )
 
     ALLOWABLE_METHODS = [
+      :access_by_bots?,
       :referred_from_resources?,
       :referred_from_under_resources?,
       :access_to_resources?,
@@ -27,6 +28,10 @@ YetiBot
       :status_code_301?,
       :status_code_304?,
       :status_code_404?,
+      :partial_content?,
+      :moved_permanently?,
+      :not_modified?,
+      :not_found?,
     ]
 
     module ConfigFields
