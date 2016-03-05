@@ -17,8 +17,8 @@ class TestLogLineParserQuery < Minitest::Test
   end
 
   def test_referred_from_resources?
-    record = CombinedLogRecord.parse(@log_line)
-    record2 = CombinedLogRecord.parse(@log_line2)
+    record = CombinedLogParser.parse(@log_line)
+    record2 = CombinedLogParser.parse(@log_line2)
     query = Query.new(domain: "www.example.org", resources: ["/start.html"])
     query_without_domain = Query.new(resources: ["/start.html"])
     assert_equal(true, query.referred_from_resources?(record))
@@ -27,10 +27,10 @@ class TestLogLineParserQuery < Minitest::Test
   end
 
   def test_referred_from_under_resources?
-    record = CombinedLogRecord.parse(@log_line)
-    record3 = CombinedLogRecord.parse(@log_line3)
-    record4 = CombinedLogRecord.parse(@log_line4)
-    record5 = CombinedLogRecord.parse(@log_line5)
+    record = CombinedLogParser.parse(@log_line)
+    record3 = CombinedLogParser.parse(@log_line3)
+    record4 = CombinedLogParser.parse(@log_line4)
+    record5 = CombinedLogParser.parse(@log_line5)
     query = Query.new(domain: "www.example.org", resources: ["/subdir/"])
     query2 = Query.new(domain: "www.example.org", resources: ["/"])
     assert_equal(false, query.referred_from_under_resources?(record))
@@ -41,8 +41,8 @@ class TestLogLineParserQuery < Minitest::Test
   end
 
   def test_access_to_resources?
-    record = CombinedLogRecord.parse(@log_line)
-    record3 = CombinedLogRecord.parse(@log_line3)
+    record = CombinedLogParser.parse(@log_line)
+    record3 = CombinedLogParser.parse(@log_line3)
     query = Query.new(domain: "www.example.org", resources: ["/index.html"])
     query2 = Query.new(domain: "www.example.org", resources: ["/non-existent.html"])
     query3 = Query.new(domain: "www.example.org", resources: ["/subdir/index.html"])
@@ -52,8 +52,8 @@ class TestLogLineParserQuery < Minitest::Test
   end
 
   def test_access_to_under_resources?
-    record = CombinedLogRecord.parse(@log_line)
-    record3 = CombinedLogRecord.parse(@log_line3)
+    record = CombinedLogParser.parse(@log_line)
+    record3 = CombinedLogParser.parse(@log_line3)
     query = Query.new(domain: "www.example.org", resources: ["/"])
     query2 = Query.new(domain: "www.example.org", resources: ["/non-existent.html"])
     query3 = Query.new(domain: "www.example.org", resources: ["/subdir/"])
@@ -66,49 +66,49 @@ class TestLogLineParserQuery < Minitest::Test
   end
 
   def test_status_code_404?
-    record = LogLineParser::CombinedLogRecord.parse(@log_line)
-    record6 = LogLineParser::CombinedLogRecord.parse(@log_line6)
+    record = LogLineParser::CombinedLogParser.parse(@log_line)
+    record6 = LogLineParser::CombinedLogParser.parse(@log_line6)
     query = Query.new(domain: "www.example.org", resources: ["/subdir/non-existent.html"])
     assert_equal(false, query.status_code_404?(record))
     assert_equal(true, query.status_code_404?(record6))
   end
 
   def test_access_by_bots?
-    bot_record = CombinedLogRecord.parse(@googlebot)
-    normal_record = CombinedLogRecord.parse(@log_line)
+    bot_record = CombinedLogParser.parse(@googlebot)
+    normal_record = CombinedLogParser.parse(@log_line)
     query = Query.new(domain: "www.example.org", resources: ["/subdir/non-existent.html"])
     assert(query.access_by_bots?(bot_record))
     assert_nil(query.access_by_bots?(normal_record))
   end
 
   def test_query_access_by_bots?
-    bot_record = CombinedLogRecord.parse(@googlebot)
-    normal_record = CombinedLogRecord.parse(@log_line)
+    bot_record = CombinedLogParser.parse(@googlebot)
+    normal_record = CombinedLogParser.parse(@log_line)
     assert(Query.access_by_bots?(bot_record))
     assert_nil(Query.access_by_bots?(normal_record))
   end
 
   def test_query_referred_from?
-    record = LogLineParser::CombinedLogRecord.parse(@log_line)
+    record = LogLineParser::CombinedLogParser.parse(@log_line)
     assert_equal(true, Query.referred_from?(record, ["/start.html"]))
     assert_equal(false, Query.referred_from?(record, ["/non-existent.html"]))
   end
 
   def test_query_referred_from_under?
-    record = LogLineParser::CombinedLogRecord.parse(@log_line4)
+    record = LogLineParser::CombinedLogParser.parse(@log_line4)
     assert_equal(true, Query.referred_from_under?(record, "/"))
     assert_equal(true, Query.referred_from_under?(record, "/subdir/"))
     assert_equal(false, Query.referred_from_under?(record, "/non-existent/"))
   end
 
   def test_query_access_to_resources?
-    record = LogLineParser::CombinedLogRecord.parse(@log_line)
+    record = LogLineParser::CombinedLogParser.parse(@log_line)
     assert_equal(true, Query.access_to_resources?(record, ["/index.html"]))
     assert_equal(false, Query.access_to_resources?(record, ["/start.html"]))
   end
 
   def test_query_access_to_resources_under?
-    record = LogLineParser::CombinedLogRecord.parse(@log_line3)
+    record = LogLineParser::CombinedLogParser.parse(@log_line3)
     assert_equal(true, Query.access_to_resources_under?(record, "/subdir/"))
     assert_equal(true, Query.access_to_resources_under?(record, "/"))
     assert_equal(false, Query.access_to_resources_under?(record, "/non-existent"))
@@ -138,7 +138,7 @@ class TestLogLineParserQuery < Minitest::Test
     query_log_all = Query.register_query_to_log(option_all, logs)
 
     [@log_line, @log_line4].each do |line|
-      record = LogLineParser::CombinedLogRecord.parse(line)
+      record = LogLineParser::CombinedLogParser.parse(line)
       query_log_any.call(line, record)
       query_log_all.call(line, record)
     end
@@ -172,7 +172,7 @@ class TestLogLineParserQuery < Minitest::Test
     query_log_any = Query.register_query_to_log(option_any, logs)
     query_log_any_with_ignore_match = Query.register_query_to_log(option_any_with_ignore_match, logs)
 
-    record = LogLineParser::CombinedLogRecord.parse(@log_line6)
+    record = LogLineParser::CombinedLogParser.parse(@log_line6)
     query_log_any.call(@log_line6, record)
     query_log_any_with_ignore_match.call(@log_line6, record)
     assert_equal(@log_line6, logs["log_file_any"].string)

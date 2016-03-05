@@ -37,8 +37,8 @@ class TestLogLineParserUtils < Minitest::Test
   end
 
   def test_utils_access_by_bots?
-    bot_record = CombinedLogRecord.parse(@googlebot)
-    normal_record = CombinedLogRecord.parse(@log_line)
+    bot_record = CombinedLogParser.parse(@googlebot)
+    normal_record = CombinedLogParser.parse(@log_line)
     assert(Utils.access_by_bots?(bot_record))
     assert_nil(Utils.access_by_bots?(normal_record))
   end

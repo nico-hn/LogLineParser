@@ -58,7 +58,7 @@ module LogLineParser
     end
 
     def self.choose_log_parser(log_format)
-      return LogLineParser::CombinedLogRecord unless log_format
+      return LogLineParser::CombinedLogParser unless log_format
       parser = LogLineParser::PREDEFINED_FORMATS[log_format]
       parser || LogLineParser.parser(log_format)
     end

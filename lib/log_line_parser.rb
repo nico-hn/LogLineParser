@@ -65,11 +65,11 @@ module LogLineParser
       root.subnodes.map {|node| node.to_s }
     end
 
-    def to_hash(record_type=CombinedLogRecord)
+    def to_hash(record_type=CombinedLogParser)
       record_type.to_hash(to_a)
     end
 
-    def to_record(record_type=CombinedLogRecord)
+    def to_record(record_type=CombinedLogParser)
       record_type.create(to_a)
     end
   end
@@ -208,11 +208,11 @@ module LogLineParser
 
   CommonLogRecord = parser(Apache::LogFormat::COMMON)
   CommonLogWithVHRecord = parser(Apache::LogFormat::COMMON_WITH_VH)
-  CombinedLogRecord = parser(Apache::LogFormat::COMBINED)
+  CombinedLogParser = parser(Apache::LogFormat::COMBINED)
 
   PREDEFINED_FORMATS['common'] = CommonLogRecord
   PREDEFINED_FORMATS['common_with_vh'] = CommonLogWithVHRecord
-  PREDEFINED_FORMATS['combined'] = CombinedLogRecord
+  PREDEFINED_FORMATS['combined'] = CombinedLogParser
 
   def self.each_record(record_type: CommonLogRecord,
                        input: ARGF,
