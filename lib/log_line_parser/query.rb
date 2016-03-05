@@ -2,6 +2,8 @@
 
 module LogLineParser
   class Query
+    class NotAllowableMethodError < StandardError; end
+
     TAIL_SLASH_RE = /\/$/
     SLASH = '/'
     DEFAULT_BOTS = %w(
@@ -15,6 +17,17 @@ BaiduImagespider
 BaiduMobaider
 YetiBot
 )
+
+    ALLOWABLE_METHODS = [
+      :referred_from_resources?,
+      :referred_from_under_resources?,
+      :access_to_resources?,
+      :access_to_under_resources?,
+      :status_code_206?,
+      :status_code_301?,
+      :status_code_304?,
+      :status_code_404?,
+    ]
 
     module ConfigFields
       HOST_NAME = "host_name"
@@ -56,6 +69,7 @@ YetiBot
         query = Query.new(domain: option[ConfigFields::HOST_NAME],
                           resources: option[ConfigFields::RESOURCES])
         queries = option[ConfigFields::QUERIES]
+        reject_unacceptable_queries(queries)
         log_name = option[ConfigFields::OUTPUT_LOG_NAME]
         if option[ConfigFields::QUERY_TYPE] == "all".freeze
           log_if_all_match(logs, query, queries, log_name)
@@ -65,6 +79,23 @@ YetiBot
       end
 
       private
+
+      def reject_unacceptable_queries(queries)
+        unacceptable_queries = queries - ALLOWABLE_METHODS
+        unless unacceptable_queries.empty?
+          message = error_message_for_unacceptable_queries(unacceptable_queries)
+          raise NotAllowableMethodError.new(message)
+        end
+      end
+
+      def error_message_for_unacceptable_queries(unacceptable_queries)
+        query_names = unacceptable_queries.join(", ")
+        if unacceptable_queries.length == 1
+          "An unacceptable query is set: #{query_names}"
+        else
+          "Unacceptable queries are set: #{query_names}"
+        end
+      end
 
       def log_if_all_match(logs, query, queries, log_name)
         proc do |line, record|

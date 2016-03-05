@@ -138,4 +138,23 @@ class TestLogLineParserQuery < Minitest::Test
     assert_equal(@log_line + @log_line4, logs["log_file_any"].string)
     assert_equal("", logs["log_file_all"].string)
   end
+
+  def test_not_allowable_method_error
+    option_any = {
+      "host_name" => "www.example.org",
+      "resources" => [
+        "/start.html",
+        "/subdir/index.html"
+      ],
+      "queries" => [:access_to_resources?, :referred_from_resources?, :unknown_query],
+      "output_log_name" => "log_file_any",
+      "query_type" => "any"
+    }
+
+    logs = { "log_file_any" =>  StringIO.new(String.new, "w") }
+
+    assert_raises(Query::NotAllowableMethodError) do
+      Query.register_query_to_log(option_any, logs)
+    end
+  end
 end
