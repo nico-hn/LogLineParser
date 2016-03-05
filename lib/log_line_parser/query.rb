@@ -32,7 +32,7 @@ YetiBot
     module ConfigFields
       HOST_NAME = "host_name"
       RESOURCES = "resources"
-      QUERIES = "queries"
+      MATCH = "match"
       OUTPUT_LOG_NAME = "output_log_name"
       MATCH_TYPE = "match_type" # The value should be "all" or "any".
     end
@@ -68,7 +68,7 @@ YetiBot
       def register_query_to_log(option, logs)
         query = Query.new(domain: option[ConfigFields::HOST_NAME],
                           resources: option[ConfigFields::RESOURCES])
-        queries = option[ConfigFields::QUERIES]
+        queries = option[ConfigFields::MATCH]
         reject_unacceptable_queries(queries)
         log_name = option[ConfigFields::OUTPUT_LOG_NAME]
         if option[ConfigFields::MATCH_TYPE] == "all".freeze

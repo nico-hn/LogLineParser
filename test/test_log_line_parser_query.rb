@@ -121,7 +121,7 @@ class TestLogLineParserQuery < Minitest::Test
         "/start.html",
         "/subdir/index.html"
       ],
-      "queries" => [:access_to_resources?, :referred_from_resources?],
+      "match" => [:access_to_resources?, :referred_from_resources?],
       "output_log_name" => "log_file_any",
       "match_type" => "any"
     }
@@ -154,7 +154,7 @@ class TestLogLineParserQuery < Minitest::Test
         "/start.html",
         "/subdir/index.html"
       ],
-      "queries" => [:access_to_resources?, :referred_from_resources?, :unknown_query],
+      "match" => [:access_to_resources?, :referred_from_resources?, :unknown_query],
       "output_log_name" => "log_file_any",
       "match_type" => "any"
     }
