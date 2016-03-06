@@ -44,6 +44,15 @@ YetiBot
       :moved_permanently?,
       :not_modified?,
       :not_found?,
+      :options_method?,
+      :get_method?,
+      :head_method?,
+      :post_method?,
+      :put_method?,
+      :delete_method?,
+      :trace_method?,
+      :connect_method?,
+      :patch_method?,
     ]
 
     module ConfigFields
