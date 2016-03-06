@@ -79,7 +79,8 @@ line = '"GET /index.html HTTP/1.1" 200 432 http://www.example.org/start.html -> 
 RefererLogParser.to_hash(line)
 # => {
 #   "%r" => "GET /index.html HTTP/1.1",
-#   "%>s" => "200", "%b" => "432",
+#   "%>s" => "200",
+#   "%b" => "432",
 #   "%{Referer}i" => "http://www.example.org/start.html",
 #   "->" => "->",
 #   "%U" => "/index.html",
@@ -122,12 +123,81 @@ And you will get [expected_combined_log.tsv](./test/data/expected_combined_log.t
 
 First, you have to prepare a configuration file in YAML format. [samples/sample_config.yml](./samples/sample_config.yml) is an example.
 
-And if you want to pick up from [samples/sample_combined_log.log](./samples/sample_combined_log.log) the records that match the definintions in the configration file, run the following command:
+Second, if you want to pick up from [samples/sample_combined_log.log](./samples/sample_combined_log.log) the records that match the definintions in the configuration file, run the following command:
 
     $ log_line_parser --filter-mode --log-format combined --config=samples/sample_config.yml --output-dir=samples/output samples/sample_combined_log.log
 
-The results are in [samples/output](https://github.com/nico-hn/LogLineParser/tree/master/samples/output/) directory.
+Then the results are in [samples/output](https://github.com/nico-hn/LogLineParser/tree/master/samples/output/) directory.
 
+##### Format of configuration
+
+An example of configurations is below:
+
+```yaml
+---
+host_name: www.example.org
+resources:
+ - /end.html
+ - /subdir/big.pdf
+match:
+ - :access_to_resources?
+match_type: any
+output_log_name: access-to-two-specific-files
+---
+host_name: www.example.org
+resources:
+ - /
+match:
+ - :access_to_under_resources?
+match_type: any
+ignore_match:
+ - :access_by_bots?
+ - :not_found?
+output_log_name: all-but-bots-and-not-found
+---
+host_name: www.example.org
+resources:
+ - /index.html
+match:
+ - :access_to_resources?
+ - :access_by_bots?
+match_type: all
+output_log_name: index-page-accessed-by-bot
+```
+It contains three configurations, and each of them consists of parameters in the following table:
+
+|Parameters              |Note                                                                                                       |
+|------------------------|-----------------------------------------------------------------------------------------------------------|
+|host_name (optional)    |Currently, the specified value is compared with the host part of the value of "%{Referer}i".               |
+|resources               |The values will be compared with the value of "%U%q" field or the path part of the value of "%{Referer}i". |
+|match                   |The criteria that a log record should satisfy.                                                             |
+|ignore_match (optional) |If a log record satisfies any of the criteria listed under this parameter, the record is ignored.          |
+|match_type (optional)   |The value is "any" (default) or "all". "any" means a log record is picked up if any of the criteria listed under the "match" parameter is satisfied. "all" means all of the criteria must be satisfied for the picking up. |
+|output_log_name         |Log records picked up are written in the file specified by this parameter.                                 |
+
+
+##### Criteria for "match" and "ignore_match" parameters
+
+|Available criteria                      |Note                                                                                              |
+|----------------------------------------|--------------------------------------------------------------------------------------------------|
+|:access_by_bots?                        |Access by major web crawlers such as Googlebot or Bingbot.                                        |
+|:referred_from_resources?               |The path part of the value of "%{Referer}i" matches with any or all of the values of "resources". |
+|:referred_from_under_resources?         |The path part of the value of "%{Referer}i" begins with any or all of the values of "resources".  |
+|:access_to_resources?                   |The value of "%U%q" matches any or all of the values of "resources".                              |
+|:access_to_under_resources?             |The value of "%U%q" begins with any or all of the values of "resources".                          |
+|:partial_content? / :status_code_206?   |The value of "%>s" is 206.                                                                        |
+|:moved_permanently? / :status_code_301? |The value of "%>s" is 301.                                                                        |
+|:not_modified? / :status_code_304?      |The value of "%>s" is 304.                                                                        |
+|:not_found? / :status_code_404?         |The value of "%>s" is 404.                                                                        |
+|:options_method?                        |The value of "%m" is OPTIONS                                                                      |
+|:get_method?                            |The value of "%m" is GET.                                                                         |
+|:head_method?                           |The value of "%m" is HEAD.                                                                        |
+|:post_method?                           |The value of "%m" is POST.                                                                        |
+|:put_method?                            |The value of "%m" is PUT.                                                                         |
+|:delete_method?                         |The value of "%m" is DELETE.                                                                      |
+|:trace_method?                          |The value of "%m" is TRACE.                                                                       |
+|:connect_method?                        |The value of "%m" is CONNECT.                                                                     |
+|:patch_method?                          |The value of "%m" is PATCH.                                                                       |
 
 
 ## Development
