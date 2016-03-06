@@ -76,13 +76,9 @@ module LogLineParser
       configs = load_config_file(options[:config_file])
       parser = choose_log_parser(options[:log_format])
       output_dir = options[:output_dir]
-      output_log_names = configs.map do |config|
-        config[Query::ConfigFields::OUTPUT_LOG_NAME]
-      end
+      output_log_names = collect_output_log_names(configs)
       Utils.open_multiple_output_files(output_log_names, output_dir) do |logs|
-        queries = configs.map do |config|
-          Query.register_query_to_log(config, logs)
-        end
+        queries = setup_queries_from_configs(configs, logs)
         LogLineParser.each_record(record_type: parser) do |line, record|
           queries.each {|query| query.call(line, record) }
         end
@@ -102,6 +98,18 @@ module LogLineParser
     end
 
     private
+
+    def self.collect_output_log_names(configs)
+      configs.map do |config|
+        config[Query::ConfigFields::OUTPUT_LOG_NAME]
+      end
+    end
+
+    def self.setup_queries_from_configs(configs, logs)
+      configs.map do |config|
+        Query.register_query_to_log(config, logs)
+      end
+    end
 
     def self.convert_to_csv(input, output)
       input.each_line do |line|
