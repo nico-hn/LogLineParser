@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["hashimoto.naoki@gmail.com"]
 
   spec.summary       = %q{A simple parser of Apache access logs}
-  spec.description   = %q{A simple parser of Apache access logs: it parses a line of Apache access log and turns it into an array of strings.}
+  spec.description   = %q{A simple parser of Apache access logs: it parses a line of Apache access log and turns it into an array of strings or a Hash object. And from the command line, you can use it as a conversion tool of file formats or as a filtering tool of access records.}
   spec.homepage      = "https://github.com/nico-hn/LogLineParser"
   spec.license       = "MIT"
 
