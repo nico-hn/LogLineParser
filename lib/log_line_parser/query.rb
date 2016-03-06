@@ -4,6 +4,18 @@ module LogLineParser
   class Query
     class NotAllowableMethodError < StandardError; end
 
+    module HttpMethods
+      OPTIONS = "OPTIONS"
+      GET = "GET"
+      HEAD = "HEAD"
+      POST = "POST"
+      PUT = "PUT"
+      DELETE = "DELETE"
+      TRACE = "TRACE"
+      CONNECT = "CONNECT"
+      PATCH = "PATCH"
+    end
+
     TAIL_SLASH_RE = /\/$/
     SLASH = '/'
     DEFAULT_BOTS = %w(
@@ -204,6 +216,42 @@ YetiBot
     alias :moved_permanently? :status_code_301?
     alias :not_modified? :status_code_304?
     alias :not_found? :status_code_404?
+
+    def options_method?(record)
+      record.method == HttpMethods::OPTIONS
+    end
+
+    def get_method?(record)
+      record.method == HttpMethods::GET
+    end
+
+    def head_method?(record)
+      record.method == HttpMethods::HEAD
+    end
+
+    def post_method?(record)
+      record.method == HttpMethods::POST
+    end
+
+    def put_method?(record)
+      record.method == HttpMethods::PUT
+    end
+
+    def delete_method?(record)
+      record.method == HttpMethods::DELETE
+    end
+
+    def trace_method?(record)
+      record.method == HttpMethods::TRACE
+    end
+
+    def connect_method?(record)
+      record.method == HttpMethods::CONNECT
+    end
+
+    def patch_method?(record)
+      record.method == HttpMethods::PATCH
+    end
 
     private
 

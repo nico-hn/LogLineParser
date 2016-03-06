@@ -73,6 +73,13 @@ class TestLogLineParserQuery < Minitest::Test
     assert_equal(true, query.status_code_404?(record6))
   end
 
+  def test_get_method?
+    record = LogLineParser::CombinedLogParser.parse(@log_line)
+    query = Query.new(domain: "www.example.org", resources: ["/subdir/non-existent.html"])
+    assert_equal(true, query.get_method?(record))
+    assert_equal(false, query.put_method?(record))
+  end
+
   def test_access_by_bots?
     bot_record = CombinedLogParser.parse(@googlebot)
     normal_record = CombinedLogParser.parse(@log_line)
