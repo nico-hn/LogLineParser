@@ -103,7 +103,7 @@ The command line tool `log_line_parser` can be used for two purposes:
 1. For converting file formats
 2. For picking up log records that satisfy certain criteria
 
-For the first purpose, the tool support conversion from an Apache log format to CSV or TSV format.
+For the first purpose, the tool supports conversion from an Apache log format to CSV or TSV format.
 And for the second purpose, criteria such as :not_found?(= :status_code_404?) or :access_by_bots? are defined, and you can combine them by writing a configuration file.
 
 #### For converting file formats
