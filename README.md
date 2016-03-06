@@ -1,6 +1,7 @@
 # LogLineParser
 
 LogLineParser is a simple parser of Apache access logs. It parses a line of Apache access log and turns it into an array of strings or a Hash object.
+And from the command line, you can use it as a conversion tool of file formats or as a filtering tool of access records.
 
 ## Installation
 
@@ -57,11 +58,11 @@ LogLineParser::CombinedLogParser.to_hash(line)
 Three parsers are predefined for such cases:
 
 <dl>
-<dt>CommonLogParser</dt>
+<dt>LogLineParser::CommonLogParser</dt>
 <dd>For Common Log Format (CLF)</dd>
-<dt>CommonLogWithVHParser</dt>
+<dt>LogLineParser::CommonLogWithVHParser</dt>
 <dd>For Common Log Format with Virtual Host</dd>
-<dt>CombinedLogParser</dt>
+<dt>LogLineParser::CombinedLogParser</dt>
 <dd>NCSA extended/combined log format</dd>
 </dl>
 
@@ -93,7 +94,7 @@ RefererLogParser.to_hash(line)
 #### Limitations
 
 * Currently, you should include at least `%r`, `%>s` and `%b` in the format strings passed to `LogLineParser.parser`.
-* If the value of a field is expected to contain a space, you should enclose that field in double quotes.
+* If the value of a field is expected to contain a space, such field should be enclosed in double quotes (that means you have to change access log settings).
 
 ### As a command-line application
 
@@ -103,11 +104,11 @@ The command line tool `log_line_parser` can be used for two purposes:
 2. For picking up log records that satisfy certain criteria
 
 For the first purpose, the tool support conversion from an Apache log format to CSV or TSV format.
-And for the second purpose, criteria such as :not_found?(= :status_code_404?) or access_by_bots? are defined, and you can combine them writing a configuration file.
+And for the second purpose, criteria such as :not_found?(= :status_code_404?) or :access_by_bots? are defined, and you can combine them by writing a configuration file.
 
 #### For converting file formats
 
-Suppose you have an Apache log file [example_combined_log.log](./test/data/example_combined_log.log), and the following command in your terminal:
+Suppose you have an Apache log file [example_combined_log.log](./test/data/example_combined_log.log), and run the following command in your terminal:
 
     $ log_line_parser example_combined_log.log > expected_combined_log.csv
 
@@ -123,7 +124,7 @@ And you will get [expected_combined_log.tsv](./test/data/expected_combined_log.t
 
 First, you have to prepare a configuration file in YAML format. [samples/sample_config.yml](./samples/sample_config.yml) is an example.
 
-Second, if you want to pick up from [samples/sample_combined_log.log](./samples/sample_combined_log.log) the records that match the definintions in the configuration file, run the following command:
+Second, run the following command if you want to pick up from [samples/sample_combined_log.log](./samples/sample_combined_log.log) the log records that meet the definitions in the configuration file:
 
     $ log_line_parser --filter-mode --log-format combined --config=samples/sample_config.yml --output-dir=samples/output samples/sample_combined_log.log
 
@@ -178,26 +179,26 @@ It contains three configurations, and each of them consists of parameters in the
 
 ##### Criteria for "match" and "ignore_match" parameters
 
-|Available criteria                      |Note                                                                                              |
-|----------------------------------------|--------------------------------------------------------------------------------------------------|
-|:access_by_bots?                        |Access by major web crawlers such as Googlebot or Bingbot.                                        |
-|:referred_from_resources?               |The path part of the value of "%{Referer}i" matches with any or all of the values of "resources". |
-|:referred_from_under_resources?         |The path part of the value of "%{Referer}i" begins with any or all of the values of "resources".  |
-|:access_to_resources?                   |The value of "%U%q" matches any or all of the values of "resources".                              |
-|:access_to_under_resources?             |The value of "%U%q" begins with any or all of the values of "resources".                          |
-|:partial_content? / :status_code_206?   |The value of "%>s" is 206.                                                                        |
-|:moved_permanently? / :status_code_301? |The value of "%>s" is 301.                                                                        |
-|:not_modified? / :status_code_304?      |The value of "%>s" is 304.                                                                        |
-|:not_found? / :status_code_404?         |The value of "%>s" is 404.                                                                        |
-|:options_method?                        |The value of "%m" is OPTIONS                                                                      |
-|:get_method?                            |The value of "%m" is GET.                                                                         |
-|:head_method?                           |The value of "%m" is HEAD.                                                                        |
-|:post_method?                           |The value of "%m" is POST.                                                                        |
-|:put_method?                            |The value of "%m" is PUT.                                                                         |
-|:delete_method?                         |The value of "%m" is DELETE.                                                                      |
-|:trace_method?                          |The value of "%m" is TRACE.                                                                       |
-|:connect_method?                        |The value of "%m" is CONNECT.                                                                     |
-|:patch_method?                          |The value of "%m" is PATCH.                                                                       |
+|Available criteria                      |Note                                                                                      |
+|----------------------------------------|------------------------------------------------------------------------------------------|
+|:access_by_bots?                        |Access by major web crawlers such as Googlebot or Bingbot.                                |
+|:referred_from_resources?               |The path part of the value of "%{Referer}i" matches any of the values of "resources".     |
+|:referred_from_under_resources?         |The path part of the value of "%{Referer}i" begins with any of the values of "resources". |
+|:access_to_resources?                   |The value of "%U%q" matches any of the values of "resources".                             |
+|:access_to_under_resources?             |The value of "%U%q" begins with any of the values of "resources".                         |
+|:partial_content? / :status_code_206?   |The value of "%>s" is 206.                                                                |
+|:moved_permanently? / :status_code_301? |The value of "%>s" is 301.                                                                |
+|:not_modified? / :status_code_304?      |The value of "%>s" is 304.                                                                |
+|:not_found? / :status_code_404?         |The value of "%>s" is 404.                                                                |
+|:options_method?                        |The value of "%m" is OPTIONS                                                              |
+|:get_method?                            |The value of "%m" is GET.                                                                 |
+|:head_method?                           |The value of "%m" is HEAD.                                                                |
+|:post_method?                           |The value of "%m" is POST.                                                                |
+|:put_method?                            |The value of "%m" is PUT.                                                                 |
+|:delete_method?                         |The value of "%m" is DELETE.                                                              |
+|:trace_method?                          |The value of "%m" is TRACE.                                                               |
+|:connect_method?                        |The value of "%m" is CONNECT.                                                             |
+|:patch_method?                          |The value of "%m" is PATCH.                                                               |
 
 
 ## Development
