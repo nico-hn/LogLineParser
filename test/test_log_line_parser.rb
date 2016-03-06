@@ -131,6 +131,8 @@ class TestLogLineParser < Minitest::Test
   end
 
   def test_combined_log_record
+    default_parse_time_value = LogLineParser::CombinedLogParser.parse_time_value
+    LogLineParser::CombinedLogParser.parse_time_value = true
     record = LogLineParser.parse(@log_line).to_record
     record2 = LogLineParser.parse(@log_line2).to_record
     record3 = LogLineParser.parse(@log_line3).to_record
@@ -146,6 +148,7 @@ class TestLogLineParser < Minitest::Test
     assert_equal("/start.html", record.referer_resource)
     assert_equal("/", record2.referer_resource)
     assert_equal("/", record3.referer_resource)
+    LogLineParser::CombinedLogParser.parse_time_value = default_parse_time_value
   end
 
   def test_combined_log_record_to_hash
@@ -170,11 +173,16 @@ class TestLogLineParser < Minitest::Test
   end
 
   def test_combined_log_record_date
+    default_parse_time_value = LogLineParser::CombinedLogParser.parse_time_value
+    LogLineParser::CombinedLogParser.parse_time_value = true
     record = LogLineParser.parse(@log_line).to_record
     assert_equal("20160207", record.date.strftime("%Y%m%d"))
+    LogLineParser::CombinedLogParser.parse_time_value = default_parse_time_value
   end
 
   def test_combined_log_record_parse
+    default_parse_time_value = LogLineParser::CombinedLogParser.parse_time_value
+    LogLineParser::CombinedLogParser.parse_time_value = true
     record = LogLineParser::CombinedLogParser.parse(@log_line)
     record2 = LogLineParser::CombinedLogParser.parse(@log_line2)
     expected_user_agent = 'Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0'
@@ -187,6 +195,7 @@ class TestLogLineParser < Minitest::Test
     assert_equal("www.example.org", record.referer_host)
     assert_equal("/start.html", record.referer_resource)
     assert_equal("/", record2.referer_resource)
+    LogLineParser::CombinedLogParser.parse_time_value = default_parse_time_value
   end
 
   def test_combined_log_record_referred_from_host
