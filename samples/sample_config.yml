@@ -1,0 +1,46 @@
+---
+host_name: www.example.org
+resources:
+ - /subdir/index.html
+match:
+ - :access_to_under_resources?
+ - :referred_from_resources?
+match_type: any
+output_log_name: all-records-related-to-subdir_index
+---
+host_name: www.example.org
+resources:
+ - /end.html
+ - /subdir/big.pdf
+match:
+ - :access_to_resources?
+match_type: any
+output_log_name: access-to-two-specific-files
+---
+host_name: www.example.org
+resources:
+ - /
+match:
+ - :access_to_under_resources?
+match_type: any
+ignore_match:
+ - :access_by_bots?
+ - :not_found?
+output_log_name: all-but-bots-and-not-found
+---
+host_name: www.example.org
+resources:
+ - /index.html
+match:
+ - :access_to_resources?
+ - :access_by_bots?
+match_type: all
+output_log_name: index-page-accessed-by-bot
+---
+host_name: www.example.net
+resources:
+ - /external.html
+match:
+ - :referred_from_resources?
+match_type: all
+output_log_name: referred-from-external-site
