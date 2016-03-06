@@ -95,10 +95,10 @@ class TestLogLineParserQuery < Minitest::Test
     assert_nil(Query.access_by_bots?(normal_record))
   end
 
-  def test_query_referred_from?
+  def test_query_referred_from_resources?
     record = LogLineParser::CombinedLogParser.parse(@log_line)
-    assert_equal(true, Query.referred_from?(record, ["/start.html"]))
-    assert_equal(false, Query.referred_from?(record, ["/non-existent.html"]))
+    assert_equal(true, Query.referred_from_resources?(record, ["/start.html"]))
+    assert_equal(false, Query.referred_from_resources?(record, ["/non-existent.html"]))
   end
 
   def test_query_referred_from_under?

@@ -66,7 +66,7 @@ YetiBot
       bots_re =~ record.user_agent
     end
 
-    def self.referred_from?(record, resources=[])
+    def self.referred_from_resources?(record, resources=[])
       resources.include?(record.referer_resource)
     end
 
