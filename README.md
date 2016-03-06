@@ -122,7 +122,7 @@ And you will get [expected_combined_log.tsv](./test/data/expected_combined_log.t
 
 First, you have to prepare a configuration file in YAML format. [samples/sample_config.yml](./samples/sample_config.yml) is an example.
 
-And if you want to pick up from [samples/sample_combined_log.log](./samples/sample_combined_log.log) the records that match the definintions in the configration file, run the following command:
+And if you want to pick up from [samples/sample_combined_log.log](./samples/sample_combined_log.log) the records that match the definintions in the configuration file, run the following command:
 
     $ log_line_parser --filter-mode --log-format combined --config=samples/sample_config.yml --output-dir=samples/output samples/sample_combined_log.log
 
