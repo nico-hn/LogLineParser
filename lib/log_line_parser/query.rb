@@ -78,7 +78,7 @@ YetiBot
       resources.include?(record.resource)
     end
 
-    def self.access_to_resources_under?(record, path)
+    def self.access_to_under?(record, path)
       record.resource.start_with?(path)
     end
 

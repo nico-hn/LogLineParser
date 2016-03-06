@@ -114,11 +114,11 @@ class TestLogLineParserQuery < Minitest::Test
     assert_equal(false, Query.access_to_resources?(record, ["/start.html"]))
   end
 
-  def test_query_access_to_resources_under?
+  def test_query_access_to_under?
     record = LogLineParser::CombinedLogParser.parse(@log_line3)
-    assert_equal(true, Query.access_to_resources_under?(record, "/subdir/"))
-    assert_equal(true, Query.access_to_resources_under?(record, "/"))
-    assert_equal(false, Query.access_to_resources_under?(record, "/non-existent"))
+    assert_equal(true, Query.access_to_under?(record, "/subdir/"))
+    assert_equal(true, Query.access_to_under?(record, "/"))
+    assert_equal(false, Query.access_to_under?(record, "/non-existent"))
   end
 
   def test_query_register_query_to_log
