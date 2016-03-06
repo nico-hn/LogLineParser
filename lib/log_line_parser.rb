@@ -206,6 +206,10 @@ module LogLineParser
     # LogLineTokenizer.tokenize(line.chomp, stack)
   end
 
+  def self.to_array(line)
+    parse(line).to_a
+  end
+
   CommonLogParser = parser(Apache::LogFormat::COMMON)
   CommonLogWithVHParser = parser(Apache::LogFormat::COMMON_WITH_VH)
   CombinedLogParser = parser(Apache::LogFormat::COMBINED)
