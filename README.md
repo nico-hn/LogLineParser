@@ -28,7 +28,7 @@ Or install it yourself as:
 require 'log_line_parser'
 
 line = '192.168.3.4 - - [07/Feb/2016: ... ] ...'
-LogLineParser.parse(line).to_a
+LogLineParser.to_array(line)
 # => ["192.168.3.4", "-", "-", "07/Feb/2016: ... ", ... ]
 ```
 
