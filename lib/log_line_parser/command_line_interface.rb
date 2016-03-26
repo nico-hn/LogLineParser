@@ -41,7 +41,7 @@ module LogLineParser
         end
 
         opt.on("-t [format]", "--to [=format]",
-               "Specify a format") do |format|
+               "Specify a format: csv, tsv or ltsv") do |format|
           options[:format] = format
         end
 
