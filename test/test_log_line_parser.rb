@@ -123,6 +123,13 @@ class TestLogLineParser < Minitest::Test
     assert_equal(@log_line_hash, h)
   end
 
+  def test_log_line_parser_to_array_with_strings_containing_escaped_double_quotes
+    string_with_escaped_double_quote = '192.168.3.4 - - "string containing a double quote (\\")"'
+    expected_result = ['192.168.3.4', "-", "-", "string containing a double quote (\")"]
+    result = LogLineParser.to_array(string_with_escaped_double_quote)
+    assert_equal(expected_result, result)
+  end
+
   def test_common_log_record
     record = LogLineParser::CommonLogParser.parse(@common_log_line)
     expected_last_request_status = 200
