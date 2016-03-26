@@ -3,6 +3,7 @@
 require "log_line_parser/version"
 require "log_line_parser/line_parser"
 require "log_line_parser/apache"
+require "log_line_parser/ltsv"
 require "strscan"
 require "time"
 require "date"
@@ -82,6 +83,7 @@ module LogLineParser
     def setup(field_names, format_strings=nil)
       @field_names = field_names
       @format_strings = format_strings
+      @ltsv_labels = Ltsv.format_strings_to_labels(format_strings)
       @number_of_fields = field_names.length
       @referer_defined = field_names.include?(:referer)
       @parse_time_value = false
@@ -113,6 +115,11 @@ module LogLineParser
       end
       parse_request(h)
       h
+    end
+
+    def to_ltsv(line)
+      values = line.kind_of?(Array) ? line : LogLineParser.parse(line).to_a
+      Ltsv.to_ltsv(@ltsv_labels, values)
     end
 
     def parse_request(h)

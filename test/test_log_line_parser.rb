@@ -9,6 +9,7 @@ class TestLogLineParser < Minitest::Test
     @log_line4 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org/subdir/" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @irregular_log_line = 'sub_domain-192-168-0-1.example.org - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "/dir/start.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @googlebot = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"'
+    @log_line_ltsv = "host:192.168.3.4\tident:-\tuser:quidam\ttime:07/Feb/2016:07:39:42 +0900\treq:GET /index.html HTTP/1.1\tstatus:200\tsize:432\treferer:http://www.example.org/start.html\tua:Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"
     @mal_formed_log_line = 'some thing wrong'
     @log_line_hash = {
       "%h" => "192.168.3.4",
@@ -161,6 +162,11 @@ class TestLogLineParser < Minitest::Test
   def test_combined_log_record_to_hash
     h = LogLineParser::CombinedLogParser.to_hash(@log_line)
     assert_equal(@log_line_hash, h)
+  end
+
+  def test_combined_log_record_to_ltsv
+    ltsv = LogLineParser::CombinedLogParser.to_ltsv(@log_line)
+    assert_equal(@log_line_ltsv, ltsv)
   end
 
   def test_combined_log_record_parse_time
