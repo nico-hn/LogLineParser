@@ -92,6 +92,9 @@ module LogLineParser
         convert_to_csv(input, output)
       when "tsv"
         convert_to_tsv(input, output)
+      when "ltsv"
+        convert_to_ltsv(input, output,
+                        choose_log_parser(options[:log_format]))
       else
         raise UnsupportedFormatError.new(output_format)
       end
@@ -120,6 +123,12 @@ module LogLineParser
     def self.convert_to_tsv(input, output)
       input.each_line do |line|
         output.puts Utils.to_tsv(line.chomp)
+      end
+    end
+
+    def self.convert_to_ltsv(input, output, parser)
+      input.each_line do |line|
+        output.puts parser.to_ltsv(line.chomp)
       end
     end
   end
