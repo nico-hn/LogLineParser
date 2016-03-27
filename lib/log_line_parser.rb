@@ -217,8 +217,21 @@ module LogLineParser
     parse(line).to_a
   end
 
+  ##
+  # Parser of Common Log Format (CLF)
+  #
+  # ref: https://www.w3.org/Daemon/User/Config/Logging.html#common-logfile-format
+
   CommonLogParser = parser(Apache::LogFormat::COMMON)
+
+  ##
+  # Parser of Common Log Format with Virtual Host
+
   CommonLogWithVHParser = parser(Apache::LogFormat::COMMON_WITH_VH)
+
+  ##
+  # Parser of NCSA extended/combined log format
+
   CombinedLogParser = parser(Apache::LogFormat::COMBINED)
 
   PREDEFINED_FORMATS['common'] = CommonLogParser

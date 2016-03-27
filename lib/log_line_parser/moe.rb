@@ -5,8 +5,8 @@ require 'log_line_parser/utils'
 
 module LogLineParser
 
-  # MoeLogParser is added from the personal needs of the original author,
-  # and the LogFormat for it is not a widely used one.
+  # MoeLogFormat and MoeLogParser is added from the personal needs of the
+  # original author, and the log format is not a widely used one.
   # You may remove this file if you don't need it.
   # (MOE is the acronym of the name of the organization for which
   # the author is working at the time of the first release of this program.)
