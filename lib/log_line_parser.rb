@@ -190,6 +190,15 @@ module LogLineParser
     record_type
   end
 
+  ##
+  # Creates a parser from a LogFormat.
+  #
+  # For example,
+  #
+  #    parser = LogLineParse.parser("%h %l %u %t \"%r\" %>s %b")
+  #
+  # creates the parser of Common Log Format.
+
   def self.parser(log_format)
     if log_format.kind_of? String
       format_strings = Apache.parse_log_format(log_format)
@@ -212,6 +221,11 @@ module LogLineParser
     #
     # LogLineTokenizer.tokenize(line.chomp, stack)
   end
+
+  ##
+  # Turns a line of Apache access logs into an array of field values.
+  #
+  # Escaped characters such as "\\t" or "\\"" will be unescaped.
 
   def self.to_array(line)
     parse(line).to_a
@@ -238,9 +252,16 @@ module LogLineParser
   PREDEFINED_FORMATS['common_with_vh'] = CommonLogWithVHParser
   PREDEFINED_FORMATS['combined'] = CombinedLogParser
 
+  ##
+  # Reads each line from +input+ (Apache access log files are expected) and
+  # parses it, then yields the line and the parsed result (+record+) to the
+  # associated block.
+  #
+  # When it fails to parse a line, the line will be printed to +error_output+
+
   def self.each_record(record_type: CommonLogParser,
                        input: ARGF,
-                       error_output: STDERR)
+                       error_output: STDERR) # :yields: line, record
     input.each_line do |line|
       begin
         yield line, record_type.parse(line)
