@@ -66,12 +66,12 @@ module LogLineParser
       root.subnodes.map {|node| node.to_s }
     end
 
-    def to_hash(record_type=CombinedLogParser)
-      record_type.to_hash(to_a)
+    def to_hash(parser=CombinedLogParser)
+      parser.to_hash(to_a)
     end
 
-    def to_record(record_type=CombinedLogParser)
-      record_type.create(to_a)
+    def to_record(parser=CombinedLogParser)
+      parser.create(to_a)
     end
   end
 
@@ -261,12 +261,12 @@ module LogLineParser
   #
   # When it fails to parse a line, the line will be printed to +error_output+
 
-  def self.each_record(record_type: CommonLogParser,
+  def self.each_record(parser: CommonLogParser,
                        input: ARGF,
                        error_output: STDERR) # :yields: line, record
     input.each_line do |line|
       begin
-        yield line, record_type.parse(line)
+        yield line, parser.parse(line)
       rescue MalFormedRecordError => e
         error_output.print e.message
       end
