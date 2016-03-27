@@ -261,7 +261,7 @@ module LogLineParser
   #
   # When it fails to parse a line, the line will be printed to +error_output+
 
-  def self.each_record(parser: CommonLogParser,
+  def self.each_record(parser: CombinedLogParser,
                        input: ARGF,
                        error_output: STDERR) # :yields: line, record
     input.each_line do |line|
