@@ -122,6 +122,8 @@ module LogLineParser
       Ltsv.to_ltsv(@ltsv_labels, values)
     end
 
+    private
+
     def parse_request(h)
       if first_line_of_request = h["%r".freeze]
         request = first_line_of_request.split(/ /)
@@ -130,8 +132,6 @@ module LogLineParser
         h["%U%q"] ||= request.size == 1 ? request[0] : request.join(" ".freeze)
       end
     end
-
-    private
 
     def response_size(rec)
       size_str = rec.response_bytes
