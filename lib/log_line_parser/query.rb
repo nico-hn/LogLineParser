@@ -75,6 +75,10 @@ YetiBot
       bots_re =~ record.user_agent
     end
 
+    ##
+    # Returns true if the path+query part of the value of %{Referer}i
+    # matchs one of resources.
+
     def self.referred_from_resources?(record, resources=[])
       resources.include?(record.referer_resource)
     end
@@ -183,10 +187,49 @@ YetiBot
       bots_re =~ record.user_agent
     end
 
+    ##
+    # Returns true if the path+query part of the value of %{Referer}i
+    # matches one of the resources that are passed as the second
+    # argument when you create an instance of Query.
+    #
+    # When a given resource is a directory, you should append a "/" at the
+    # end of it, otherwise you would get a wrong result. For example,
+    # suppose you define the following queries:
+    #
+    #    correct_query = Query.new("www.example.org", ["/dir/subdir/"])
+    #    wrong_query = Query.new("www.example.org", ["/dir/subdir"])
+    #
+    # <tt>correct_query.referred_from_resources?(record)</tt> returns true
+    # when the value of %{Referer}i is "http://www.example.org/subdir"
+    # or "http://www.example.org/subdir/",
+    # but <tt>wrong_query.referred_from_resources?(record)</tt> returns
+    # false for "http://www.example.org/subdir/"
+
     def referred_from_resources?(record)
       if_matching_domain(record) and
         @normalized_resources.include?(record.referer_resource)
     end
+
+    ##
+    # Returns true if the path+query part of the value of %{Referer}i
+    # begins with one of the resources that are passed as the second
+    # argument when you create an instance of Query.
+    #
+    # When a given resource is a directory, you should append a "/" at the
+    # end of it, otherwise you would get a wrong result. For example,
+    # suppose you define the following queries:
+    #
+    #    correct_query = Query.new("www.example.org", ["/dir/subdir/"])
+    #    wrong_query = Query.new("www.example.org", ["/dir/subdir"])
+    #
+    # <tt>wrong_query.referred_from_under_resources?(record)</tt>
+    # returns true even when the value of %{Referer}i in record is
+    # "http://www.example.org/subdir_for_images/a_file_name",
+    # while <tt>correct_query.referred_from_under_resources?(record)</tt>
+    # returns true when the value of %{Referer}i is
+    # "http://www.example.org/subdir/a_filename" or
+    # "http://www.example.org/subdir",
+    # and returns false for "http://www.example.org/subdir_for_images".
 
     def referred_from_under_resources?(record)
       referer_resource = record.referer_resource
@@ -195,9 +238,50 @@ YetiBot
         @resources.any?{|target| referer_resource.start_with?(target) }
     end
 
+    ##
+    # Returns true if the value of %U%q in +record+ matches one of the
+    # resources that are passed as the second argument when you create
+    # an instance of Query.
+    #
+    # When you give a directory as one of resources, you should append
+    # a "/" at the end of the directory, otherwise records whose %U%q
+    # value points to the same directory but without trailing "/"
+    # will return false.
+    #
+    # For example, when you create queries as follows,
+    #
+    #    query_with_slash = Query.new("www.example.org", ["/dir/subdir/"])
+    #    query_without_slash = Query.new("www.example.org", ["/dir/subdir"])
+    #
+    # <tt>query_with_slash.access_to_resources?(record)</tt> returns true for
+    # both of records whose %U%q value is "/dir/subdir/" and "/dir/subdir"
+    # respectively.
+    #
+    # But <tt>query_without_slash.access_to_resources?(record)</tt> returns
+    # false for a record whose %U%q value is "/dir/subdir/"
+
     def access_to_resources?(record)
       @normalized_resources.include?(record.resource)
     end
+
+    ##
+    # Returns true if the value of %U%q in +record+ begins with one
+    # of the resources that are passed as the second argument when
+    # you create an instance of Query.
+    #
+    # When a given resource is a directory, you should append a "/" at the
+    # end of it, otherwise you would get a wrong result. For example,
+    # suppose you define the following queries:
+    #
+    #    correct_query = Query.new("www.example.org", ["/dir/subdir/"])
+    #    wrong_query = Query.new("www.example.org", ["/dir/subdir"])
+    #
+    # <tt>wrong_query.access_to_under_resources?(record)</tt>
+    # returns true even when the value of %U%q in record is
+    # "/subdir_for_images/a_file_name", while
+    # <tt>correct_query.access_to_under_resources?(record)</tt>
+    # returns true when the value of %U%q is "/subdir/a_filename" or
+    # "/subdir", and returns false for "/subdir_for_images".
 
     def access_to_under_resources?(record)
       resource = record.resource
