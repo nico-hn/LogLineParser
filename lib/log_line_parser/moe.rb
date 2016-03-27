@@ -11,9 +11,13 @@ module LogLineParser
   # (MOE is the acronym of the name of the organization for which
   # the author is working at the time of the first release of this program.)
   #
-  # CombinedLogFormat + "%D"
+  # MoeLogFormat = CombinedLogFormat + "%D"
   MoeLogFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\" %D"
+
+  ##
+  # Parser of MoeLogFormat
   MoeLogParser = parser(MoeLogFormat)
+
   PREDEFINED_FORMATS['moe'] = MoeLogParser
 end
 
