@@ -190,6 +190,8 @@ module LogLineParser
     record_type
   end
 
+  private_class_method :create_record_type
+
   ##
   # Creates a parser from a LogFormat.
   #
