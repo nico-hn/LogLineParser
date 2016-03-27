@@ -197,7 +197,7 @@ module LogLineParser
   #
   # For example,
   #
-  #    parser = LogLineParse.parser("%h %l %u %t \"%r\" %>s %b")
+  #    parser = LogLineParser.parser("%h %l %u %t \"%r\" %>s %b")
   #
   # creates the parser of Common Log Format.
 
