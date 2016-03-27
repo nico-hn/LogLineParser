@@ -31,7 +31,8 @@ module LogLineParser
         end
 
         opt.on("-l [LogFormat]", "--log-format [=LogFormat]",
-               "Specify LogFormat") do |log_format|
+               "Specify LogFormat by giving a LogFormat or one of \
+formats predefined as #{predefined_options_for_log_format}") do |log_format|
           options[:log_format] = log_format
         end
 
@@ -101,6 +102,12 @@ module LogLineParser
     end
 
     private
+
+    def self.predefined_options_for_log_format
+      PREDEFINED_FORMATS.keys.
+        map {|opt| "\"#{opt}\"" }.
+        join(", ")
+    end
 
     def self.collect_output_log_names(configs)
       configs.map do |config|
