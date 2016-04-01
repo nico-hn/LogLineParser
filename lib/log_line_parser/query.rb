@@ -96,9 +96,10 @@ YetiBot
     end
 
     class << self
-      def register_query_to_log(option, logs)
+      def register_query_to_log(option, logs, bots_re=DEFAULT_BOTS_RE)
         query = Query.new(domain: option[ConfigFields::HOST_NAME],
-                          resources: option[ConfigFields::RESOURCES])
+                          resources: option[ConfigFields::RESOURCES],
+                          bots_re: bots_re)
         queries = option[ConfigFields::MATCH]
         reject_unacceptable_queries(queries)
         log = logs[option[ConfigFields::OUTPUT_LOG_NAME]]
