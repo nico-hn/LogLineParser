@@ -176,15 +176,16 @@ YetiBot
       end
     end
 
-    def initialize(domain: nil, resources: [])
+    def initialize(domain: nil, resources: [], bots_re: DEFAULT_BOTS_RE)
       @domain = domain
       @resources = normalize_resources(resources)
+      @bots_re = bots_re
       @normalized_resources = normalize_resources(resources)
       @normalized_dirs = @normalized_resources - @resources
     end
 
-    def access_by_bots?(record, bots_re=DEFAULT_BOTS_RE)
-      bots_re =~ record.user_agent
+    def access_by_bots?(record)
+      @bots_re =~ record.user_agent
     end
 
     ##
