@@ -79,7 +79,7 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
       output_dir = options[:output_dir]
       output_log_names = collect_output_log_names(configs)
       Utils.open_multiple_output_files(output_log_names, output_dir) do |logs|
-        queries = setup_queries_from_configs(configs, logs)
+        queries = setup_queries_from_configs(configs, logs, Query::DEFAULT_BOTS_RE)
         LogLineParser.each_record(parser: parser) do |line, record|
           queries.each {|query| query.call(line, record) }
         end
@@ -115,9 +115,9 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
       end
     end
 
-    def self.setup_queries_from_configs(configs, logs)
+    def self.setup_queries_from_configs(configs, logs, bots_re)
       configs.map do |config|
-        Query.register_query_to_log(config, logs)
+        Query.register_query_to_log(config, logs, bots_re)
       end
     end
 
