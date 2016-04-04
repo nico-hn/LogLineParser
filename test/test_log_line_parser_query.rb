@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'minitest_helper'
-
+require 'yaml'
 
 class TestLogLineParserQuery < Minitest::Test
   include LogLineParser
@@ -14,6 +14,19 @@ class TestLogLineParserQuery < Minitest::Test
     @log_line5 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org/subdir/example.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line6 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/non-existent.html HTTP/1.1" 404 432 "http://www.example.org/subdir/example.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @googlebot = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"'
+  end
+
+  def test_read_bots_yaml
+    example_data = File.read("test/data/example_bots.yaml")
+    example_config = YAML.load_stream(example_data).to_a[0]
+    default_data = File.read("test/data/example_default_bots.yaml")
+    default_config = YAML.load_stream(default_data).to_a[0]
+    re = Query.compile_bots_re(example_config)
+    default_re = Query.compile_bots_re(default_config)
+    expected_re = /(?i-mx:Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot|Applebot)|(?-mix: bot$)/
+    expected_default_re = /Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot/in
+    assert_equal(expected_re, re)
+    assert_equal(expected_default_re, default_re)
   end
 
   def test_referred_from_resources?

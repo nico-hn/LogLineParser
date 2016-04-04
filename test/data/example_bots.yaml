@@ -1,0 +1,14 @@
+inherit_default_bots: false
+bots:
+ - Googlebot
+ - Googlebot-Mobile
+ - Mediapartners-Google
+ - Bingbot
+ - Slurp
+ - Baiduspider
+ - BaiduImagespider
+ - BaiduMobaider
+ - YetiBot
+ - Applebot
+bots_re:
+ - " bot$"

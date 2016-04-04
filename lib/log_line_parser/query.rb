@@ -80,8 +80,12 @@ YetiBot
       if bots_config[BotsConfigLabels::INHERIT_DEFAULT_BOTS]
         bot_names = (DEFAULT_BOTS + bot_names).uniq
       end
-      bots_str = bot_names.map {|name| Regexp.escape(name) }.join("|")
-      Regexp.compile(bots_str, Regexp::IGNORECASE)
+      escaped_bots_str = bot_names.map {|name| Regexp.escape(name) }.join("|")
+      escaped_re = Regexp.compile(escaped_bots_str, Regexp::IGNORECASE, "n")
+      bots_pats = bots_config[BotsConfigLabels::BOTS_RE]
+      return escaped_re unless bots_pats
+      re = Regexp.compile(bots_pats.join("|"), nil, "n")
+      Regexp.union(escaped_re, re)
     end
 
     DEFAULT_BOTS_RE = compile_bots_re
