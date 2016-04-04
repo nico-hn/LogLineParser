@@ -16,6 +16,12 @@ module LogLineParser
       PATCH = "PATCH"
     end
 
+    module BotsConfigLabels
+      INHERIT_DEFAULT_BOTS = "inherit_default_bots"
+      BOTS = "bots"
+      BOTS_RE = "bots_re"
+    end
+
     TAIL_SLASH_RE = /\/$/
     SLASH = '/'
     DEFAULT_BOTS = %w(
@@ -29,6 +35,11 @@ BaiduImagespider
 BaiduMobaider
 YetiBot
 )
+    DEFAULT_BOTS_CONFIG = {
+      BotsConfigLabels::INHERIT_DEFAULT_BOTS => true,
+      BotsConfigLabels::BOTS => [],
+      BotsConfigLabels::BOTS_RE => nil
+    }
 
     ALLOWABLE_METHODS = [
       :access_by_bots?,
@@ -64,7 +75,11 @@ YetiBot
       MATCH_TYPE = "match_type" # The value should be "all" or "any".
     end
 
-    def self.compile_bots_re(bot_names=DEFAULT_BOTS)
+    def self.compile_bots_re(bots_config=DEFAULT_BOTS_CONFIG)
+      bot_names = bots_config[BotsConfigLabels::BOTS] || []
+      if bots_config[BotsConfigLabels::INHERIT_DEFAULT_BOTS]
+        bot_names = (DEFAULT_BOTS + bot_names).uniq
+      end
       bots_str = bot_names.map {|name| Regexp.escape(name) }.join("|")
       Regexp.compile(bots_str, Regexp::IGNORECASE)
     end
