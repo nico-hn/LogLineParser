@@ -75,6 +75,12 @@ expected_result = [
     assert_equal(CommonLogWithVHParser, parser)
   end
 
+  def test_compile_bots_re_from_config_file
+    bots_re = CommandLineInterface.compile_bots_re_from_config_file("test/data/example_bots.yaml")
+    expected_bots_re = /(?i-mx:Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot|Applebot)|(?-mix: bot$)/
+    assert_equal(expected_bots_re, bots_re)
+  end
+
   def test_execute_as_converter_to_csv
     setup_argv("--to=csv")
     opts = CommandLineInterface.parse_options

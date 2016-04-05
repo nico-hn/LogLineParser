@@ -93,6 +93,11 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
         join(", ")
     end
 
+    def self.compile_bots_re_from_config_file(bots_config_file)
+      configs = Utils.load_config_file(bots_config_file)[0]
+      Bots.compile_bots_re(configs)
+    end
+
     def self.collect_output_log_names(configs)
       configs.map do |config|
         config[Query::ConfigFields::OUTPUT_LOG_NAME]
