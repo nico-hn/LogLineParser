@@ -18,6 +18,7 @@ Baiduspider
 BaiduImagespider
 BaiduMobaider
 YetiBot
+Applebot
 )
 
     DEFAULT_CONFIG = {

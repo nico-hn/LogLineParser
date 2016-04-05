@@ -24,7 +24,7 @@ class TestLogLineParserQuery < Minitest::Test
     re = Bots.compile_bots_re(example_config)
     default_re = Bots.compile_bots_re(default_config)
     expected_re = /(?i-mx:Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot|Applebot)|(?-mix: bot$)/
-    expected_default_re = /Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot/in
+    expected_default_re = /Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot|Applebot/in
     assert_equal(expected_re, re)
     assert_equal(expected_default_re, default_re)
   end

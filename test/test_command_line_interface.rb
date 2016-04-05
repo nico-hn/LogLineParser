@@ -79,7 +79,7 @@ expected_result = [
     bots_re = CommandLineInterface.compile_bots_re_from_config_file("test/data/example_bots.yaml")
     default_bots_re = CommandLineInterface.compile_bots_re_from_config_file(nil)
     expected_bots_re = /(?i-mx:Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot|Applebot)|(?-mix: bot$)/
-    expected_default_bots_re = /Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot/in
+    expected_default_bots_re = /Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot|Applebot/in
     assert_equal(expected_bots_re, bots_re)
     assert_equal(expected_default_bots_re, default_bots_re)
   end
