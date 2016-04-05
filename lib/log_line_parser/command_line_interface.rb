@@ -21,6 +21,12 @@ module LogLineParser
           options[:config_file] = config_file
         end
 
+        opt.on("-b [bots_config_file]", "--bots-config [=bots_config_file]",
+               "Give a configuration file in yaml format. \
+Default bots: #{Bots::DEFAULT_BOTS.join(', ')}") do |config_file|
+          options[:bots_config_file] = config_file
+        end
+
         opt.on("-f", "--filter-mode",
                "Mode for choosing log records that satisfy certain criteria") do
           options[:filter_mode] = true
@@ -67,7 +73,8 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
       configs = Utils.load_config_file(options[:config_file])
       parser = choose_log_parser(options[:log_format])
       output_dir = options[:output_dir]
-      execute_queries(configs, parser, output_dir)
+      bots_re = compile_bots_re_from_config_file(options[:bots_config_file])
+      execute_queries(configs, parser, output_dir, bots_re)
     end
 
     def self.execute_as_converter(options, output=STDOUT, input=ARGF)
@@ -105,10 +112,10 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
       end
     end
 
-    def self.execute_queries(configs, parser, output_dir)
+    def self.execute_queries(configs, parser, output_dir, bots_re)
       output_log_names = collect_output_log_names(configs)
       Utils.open_multiple_output_files(output_log_names, output_dir) do |logs|
-        queries = setup_queries_from_configs(configs, logs, Bots::DEFAULT_RE)
+        queries = setup_queries_from_configs(configs, logs, bots_re)
         LogLineParser.each_record(parser: parser) do |line, record|
           queries.each {|query| query.call(line, record) }
         end
