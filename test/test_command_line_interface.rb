@@ -42,7 +42,7 @@ expected_result = [
         "queries" => [:access_to_under_resources?] }
     ]
 
-    parsed_result = CommandLineInterface.read_configs(yaml_data)
+    parsed_result = Utils.read_configs(yaml_data)
     assert_equal(expected_result, parsed_result)
   end
 

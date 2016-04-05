@@ -12,10 +12,6 @@ module LogLineParser
 
     DEFAULT_FORMAT = "csv"
 
-    def self.read_configs(config)
-      Utils.read_configs(config)
-    end
-
     def self.parse_options
       options = {}
 
