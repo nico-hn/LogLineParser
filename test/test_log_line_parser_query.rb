@@ -21,8 +21,8 @@ class TestLogLineParserQuery < Minitest::Test
     example_config = YAML.load_stream(example_data).to_a[0]
     default_data = File.read("test/data/example_default_bots.yaml")
     default_config = YAML.load_stream(default_data).to_a[0]
-    re = Query.compile_bots_re(example_config)
-    default_re = Query.compile_bots_re(default_config)
+    re = Bots.compile_bots_re(example_config)
+    default_re = Bots.compile_bots_re(default_config)
     expected_re = /(?i-mx:Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot|Applebot)|(?-mix: bot$)/
     expected_default_re = /Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot/in
     assert_equal(expected_re, re)

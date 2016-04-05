@@ -16,7 +16,7 @@ module LogLineParser
     }
     SPECIAL_CHARS_RE = Regexp.compile(SPECIAL_CHARS.keys.join("|"))
 
-    def self.access_by_bots?(record, bots_re=Query::DEFAULT_BOTS_RE)
+    def self.access_by_bots?(record, bots_re=Bots::DEFAULT_RE)
       Query.access_by_bots?(record, bots_re)
     end
 

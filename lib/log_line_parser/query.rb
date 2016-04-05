@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'log_line_parser/bots'
+
 module LogLineParser
   class Query
     class NotAllowableMethodError < StandardError; end
@@ -90,7 +92,7 @@ YetiBot
 
     DEFAULT_BOTS_RE = compile_bots_re
 
-    def self.access_by_bots?(record, bots_re=DEFAULT_BOTS_RE)
+    def self.access_by_bots?(record, bots_re=Bots::DEFAULT_RE)
       bots_re =~ record.user_agent
     end
 
@@ -115,7 +117,7 @@ YetiBot
     end
 
     class << self
-      def register_query_to_log(option, logs, bots_re=DEFAULT_BOTS_RE)
+      def register_query_to_log(option, logs, bots_re=Bots::DEFAULT_RE)
         query = Query.new(domain: option[ConfigFields::HOST_NAME],
                           resources: option[ConfigFields::RESOURCES],
                           bots_re: bots_re)
@@ -196,7 +198,7 @@ YetiBot
       end
     end
 
-    def initialize(domain: nil, resources: [], bots_re: DEFAULT_BOTS_RE)
+    def initialize(domain: nil, resources: [], bots_re: Bots::DEFAULT_RE)
       @domain = domain
       @resources = normalize_resources(resources)
       @bots_re = bots_re
