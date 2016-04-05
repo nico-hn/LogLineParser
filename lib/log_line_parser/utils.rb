@@ -16,10 +16,6 @@ module LogLineParser
     }
     SPECIAL_CHARS_RE = Regexp.compile(SPECIAL_CHARS.keys.join("|"))
 
-    def self.access_by_bots?(record, bots_re=Bots::DEFAULT_RE)
-      Query.access_by_bots?(record, bots_re)
-    end
-
     def self.open_multiple_output_files(base_names, dir=nil, ext="log")
       logs = {}
       filepath = dir ? File.join(dir, "%s.#{ext}") : "%s.#{ext}"
