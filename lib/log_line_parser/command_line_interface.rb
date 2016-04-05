@@ -67,13 +67,7 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
       configs = Utils.load_config_file(options[:config_file])
       parser = choose_log_parser(options[:log_format])
       output_dir = options[:output_dir]
-      output_log_names = collect_output_log_names(configs)
-      Utils.open_multiple_output_files(output_log_names, output_dir) do |logs|
-        queries = setup_queries_from_configs(configs, logs, Bots::DEFAULT_RE)
-        LogLineParser.each_record(parser: parser) do |line, record|
-          queries.each {|query| query.call(line, record) }
-        end
-      end
+      execute_queries(configs, parser, output_dir)
     end
 
     def self.execute_as_converter(options, output=STDOUT, input=ARGF)
@@ -102,6 +96,16 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
     def self.collect_output_log_names(configs)
       configs.map do |config|
         config[Query::ConfigFields::OUTPUT_LOG_NAME]
+      end
+    end
+
+    def self.execute_queries(configs, parser, output_dir)
+      output_log_names = collect_output_log_names(configs)
+      Utils.open_multiple_output_files(output_log_names, output_dir) do |logs|
+        queries = setup_queries_from_configs(configs, logs, Bots::DEFAULT_RE)
+        LogLineParser.each_record(parser: parser) do |line, record|
+          queries.each {|query| query.call(line, record) }
+        end
       end
     end
 
