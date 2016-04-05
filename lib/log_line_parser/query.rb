@@ -18,30 +18,8 @@ module LogLineParser
       PATCH = "PATCH"
     end
 
-    module BotsConfigLabels
-      INHERIT_DEFAULT_BOTS = "inherit_default_bots"
-      BOTS = "bots"
-      BOTS_RE = "bots_re"
-    end
-
     TAIL_SLASH_RE = /\/$/
     SLASH = '/'
-    DEFAULT_BOTS = %w(
-Googlebot
-Googlebot-Mobile
-Mediapartners-Google
-Bingbot
-Slurp
-Baiduspider
-BaiduImagespider
-BaiduMobaider
-YetiBot
-)
-    DEFAULT_BOTS_CONFIG = {
-      BotsConfigLabels::INHERIT_DEFAULT_BOTS => true,
-      BotsConfigLabels::BOTS => [],
-      BotsConfigLabels::BOTS_RE => nil
-    }
 
     ALLOWABLE_METHODS = [
       :access_by_bots?,
@@ -76,21 +54,6 @@ YetiBot
       OUTPUT_LOG_NAME = "output_log_name"
       MATCH_TYPE = "match_type" # The value should be "all" or "any".
     end
-
-    def self.compile_bots_re(bots_config=DEFAULT_BOTS_CONFIG)
-      bot_names = bots_config[BotsConfigLabels::BOTS] || []
-      if bots_config[BotsConfigLabels::INHERIT_DEFAULT_BOTS]
-        bot_names = (DEFAULT_BOTS + bot_names).uniq
-      end
-      escaped_bots_str = bot_names.map {|name| Regexp.escape(name) }.join("|")
-      escaped_re = Regexp.compile(escaped_bots_str, Regexp::IGNORECASE, "n")
-      bots_pats = bots_config[BotsConfigLabels::BOTS_RE]
-      return escaped_re unless bots_pats
-      re = Regexp.compile(bots_pats.join("|"), nil, "n")
-      Regexp.union(escaped_re, re)
-    end
-
-    DEFAULT_BOTS_RE = compile_bots_re
 
     def self.access_by_bots?(record, bots_re=Bots::DEFAULT_RE)
       bots_re =~ record.user_agent
