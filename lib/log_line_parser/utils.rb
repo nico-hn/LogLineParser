@@ -3,6 +3,7 @@
 require 'log_line_parser'
 require 'log_line_parser/query'
 require 'csv'
+require 'yaml'
 
 module LogLineParser
   module Utils
@@ -29,6 +30,16 @@ module LogLineParser
     ensure
       logs.each do |k, v|
         v.close
+      end
+    end
+
+    def self.read_configs(config)
+      YAML.load_stream(config).to_a
+    end
+
+    def self.load_config_file(config_file)
+      open(File.expand_path(config_file)) do |f|
+        read_configs(f.read)
       end
     end
 

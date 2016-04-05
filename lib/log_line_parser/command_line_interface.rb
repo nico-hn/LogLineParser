@@ -13,7 +13,7 @@ module LogLineParser
     DEFAULT_FORMAT = "csv"
 
     def self.read_configs(config)
-      YAML.load_stream(config).to_a
+      Utils.read_configs(config)
     end
 
     def self.parse_options
@@ -53,9 +53,7 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
     end
 
     def self.load_config_file(config_file)
-      open(File.expand_path(config_file)) do |f|
-        read_configs(f.read)
-      end
+      Utils.load_config_file(config_file)
     end
 
     def self.choose_log_parser(log_format)
