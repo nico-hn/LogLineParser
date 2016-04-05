@@ -48,10 +48,6 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
       options
     end
 
-    def self.load_config_file(config_file)
-      Utils.load_config_file(config_file)
-    end
-
     def self.choose_log_parser(log_format)
       return LogLineParser::CombinedLogParser unless log_format
       parser = LogLineParser::PREDEFINED_FORMATS[log_format]
@@ -68,7 +64,7 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
     end
 
     def self.execute_as_filter(options)
-      configs = load_config_file(options[:config_file])
+      configs = Utils.load_config_file(options[:config_file])
       parser = choose_log_parser(options[:log_format])
       output_dir = options[:output_dir]
       output_log_names = collect_output_log_names(configs)
