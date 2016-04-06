@@ -130,7 +130,7 @@ Second, run the following command if you want to pick up from [samples/sample_co
 
 Then the results are in [samples/output](https://github.com/nico-hn/LogLineParser/tree/master/samples/output/) directory.
 
-##### Format of configuration
+##### Format of configuration file
 
 An example of configurations is below:
 
@@ -199,6 +199,54 @@ It contains three configurations, and each of them consists of parameters in the
 |:trace_method?                          |The value of "%m" is TRACE.                                                               |
 |:connect_method?                        |The value of "%m" is CONNECT.                                                             |
 |:patch_method?                          |The value of "%m" is PATCH.                                                               |
+
+
+##### Default web crawlers
+
+The following web crawlers are set by default and used by Query#access_by_bots?:
+
+* Googlebot
+* Googlebot-Mobile
+* Mediapartners-Google
+* Bingbot
+* Slurp
+* Baiduspider
+* BaiduImagespider
+* BaiduMobaider
+* YetiBot
+* Applebot
+
+
+##### Format of bots configuration file
+
+You can specify web crawlers by giving a configuration file to `--bots-config` option. The following is an example of configuration file:
+
+```yaml
+inherit_default_bots: false
+bots:
+ - Googlebot
+ - Googlebot-Mobile
+ - Mediapartners-Google
+ - Bingbot
+ - Slurp
+ - Baiduspider
+ - BaiduImagespider
+ - BaiduMobaider
+ - YetiBot
+ - Applebot
+bots_re:
+ - " bot$"
+```
+
+|Parameters                      |Note                                                                                                                         |
+|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+|bots (optional)                 |Names of web crawlers that make Query#access_by_bots? return true when they are included in the value of "%{Referer}i".      |
+|inherit_default_bots (optional) |If this option is set to true, the default names of major web crawlers are added to the names specified by `bots` parameter. |
+|bots_re (optional)              |Use this parameter if you want to identify bots by regular expressions.                                                      |
+
+The values given by the configuration file are compiled into a regular expression, and you can check the expression by invoking the tool as follows:
+
+    $ log_line_parser --show-current-settings --bots-config=bots_config.yml
 
 
 ## Development
