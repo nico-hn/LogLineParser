@@ -79,6 +79,10 @@ module LogLineParser
       record.resource.start_with?(path)
     end
 
+    def self.referred_from_host?(record, host_name)
+      record.referer_host == host_name
+    end
+
     class << self
       def register_query_to_log(option, logs, bots_re=Bots::DEFAULT_RE)
         query = Query.new(domain: option[ConfigFields::HOST_NAME],

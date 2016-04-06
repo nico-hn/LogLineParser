@@ -134,6 +134,12 @@ class TestLogLineParserQuery < Minitest::Test
     assert_equal(false, Query.access_to_under?(record, "/non-existent"))
   end
 
+  def test_query_referred_from_host?
+    record = LogLineParser::CombinedLogParser.parse(@log_line)
+    assert_equal(true, Query.referred_from_host?(record, "www.example.org"))
+    assert_equal(false, Query.referred_from_host?(record, "www.example.com"))
+  end
+
   def test_query_register_query_to_log
     option_any = {
       "host_name" => "www.example.org",
