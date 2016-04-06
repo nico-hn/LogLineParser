@@ -27,6 +27,11 @@ Default bots: #{Bots::DEFAULT_BOTS.join(', ')}") do |config_file|
           options[:bots_config_file] = config_file
         end
 
+        opt.on("-s", "--show-current-settings",
+               "Show the detail of the current settings") do
+          options[:show_settings] = true
+        end
+
         opt.on("-f", "--filter-mode",
                "Mode for choosing log records that satisfy certain criteria") do
           options[:filter_mode] = true
@@ -62,11 +67,20 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
 
     def self.execute
       options = parse_options
-      if options[:filter_mode]
+      if options[:show_settings]
+        show_settings(options)
+      elsif options[:filter_mode]
         execute_as_filter(options)
       else
         execute_as_converter(options)
       end
+    end
+
+    def self.show_settings(options)
+      bots_re = compile_bots_re_from_config_file(options[:bots_config_file])
+      parser = choose_log_parser(options[:log_format])
+      puts "The regular expression for bots: #{bots_re}"
+      puts "LogFormat: #{parser.format_strings}"
     end
 
     def self.execute_as_filter(options)
