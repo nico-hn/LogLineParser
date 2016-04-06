@@ -29,9 +29,8 @@ Applebot
 
     def self.compile_bots_re(bots_config=DEFAULT_CONFIG)
       escaped_re = compile_escaped_re(bots_config)
-      bots_pats = bots_config[ConfigLabels::BOTS_RE]
-      return escaped_re unless bots_pats
-      re = Regexp.compile(bots_pats.join("|"), nil, "n")
+      re = compile_re(bots_config)
+      return escaped_re unless re
       Regexp.union(escaped_re, re)
     end
 
@@ -44,7 +43,12 @@ Applebot
       Regexp.compile(escaped_bots_str, Regexp::IGNORECASE, "n")
     end
 
-    private_class_method :compile_escaped_re
+    def self.compile_re(bots_config)
+      bots_pats = bots_config[ConfigLabels::BOTS_RE]
+      Regexp.compile(bots_pats.join("|"), nil, "n") if bots_pats
+    end
+
+    private_class_method :compile_escaped_re, :compile_re
 
     DEFAULT_RE = compile_bots_re
   end
