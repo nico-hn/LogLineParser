@@ -28,17 +28,23 @@ Applebot
     }
 
     def self.compile_bots_re(bots_config=DEFAULT_CONFIG)
-      bot_names = bots_config[ConfigLabels::BOTS] || []
-      if bots_config[ConfigLabels::INHERIT_DEFAULT_BOTS]
-        bot_names = (DEFAULT_BOTS + bot_names).uniq
-      end
-      escaped_bots_str = bot_names.map {|name| Regexp.escape(name) }.join("|")
-      escaped_re = Regexp.compile(escaped_bots_str, Regexp::IGNORECASE, "n")
+      escaped_re = compile_escaped_re(bots_config)
       bots_pats = bots_config[ConfigLabels::BOTS_RE]
       return escaped_re unless bots_pats
       re = Regexp.compile(bots_pats.join("|"), nil, "n")
       Regexp.union(escaped_re, re)
     end
+
+    def self.compile_escaped_re(bots_config)
+      bot_names = bots_config[ConfigLabels::BOTS] || []
+      if bots_config[ConfigLabels::INHERIT_DEFAULT_BOTS]
+        bot_names = (DEFAULT_BOTS + bot_names).uniq
+      end
+      escaped_bots_str = bot_names.map {|name| Regexp.escape(name) }.join("|")
+      Regexp.compile(escaped_bots_str, Regexp::IGNORECASE, "n")
+    end
+
+    private_class_method :compile_escaped_re
 
     DEFAULT_RE = compile_bots_re
   end
