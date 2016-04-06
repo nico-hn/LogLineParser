@@ -30,8 +30,8 @@ Applebot
     def self.compile_bots_re(bots_config=DEFAULT_CONFIG)
       escaped_re = compile_escaped_re(bots_config)
       re = compile_re(bots_config)
-      return escaped_re unless re
-      Regexp.union(escaped_re, re)
+      return Regexp.union(escaped_re, re) if escaped_re && re
+      escaped_re || re
     end
 
     def self.compile_escaped_re(bots_config)
@@ -39,6 +39,7 @@ Applebot
       if bots_config[ConfigLabels::INHERIT_DEFAULT_BOTS]
         bot_names = (DEFAULT_BOTS + bot_names).uniq
       end
+      return if bot_names.empty?
       escaped_bots_str = bot_names.map {|name| Regexp.escape(name) }.join("|")
       Regexp.compile(escaped_bots_str, Regexp::IGNORECASE, "n")
     end
