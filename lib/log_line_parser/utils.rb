@@ -49,12 +49,14 @@ module LogLineParser
       LogLineParser.parse(line).to_a.to_csv
     end
 
-    private
+    # private class methods
 
     def self.escape_special_chars(field)
       field.gsub(SPECIAL_CHARS_RE) do |char|
         SPECIAL_CHARS[char]
       end
     end
+
+    private_class_method :escape_special_chars
   end
 end

@@ -106,7 +106,7 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
       end
     end
 
-    private
+    # private class methods
 
     def self.predefined_options_for_log_format
       PREDEFINED_FORMATS.keys.
@@ -159,5 +159,14 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
         output.puts parser.to_ltsv(line.chomp)
       end
     end
+
+    private_class_method(:predefined_options_for_log_format,
+                         :compile_bots_re_from_config_file,
+                         :collect_output_log_names,
+                         :execute_queries,
+                         :setup_queries_from_configs,
+                         :convert_to_csv,
+                         :convert_to_tsv,
+                         :convert_to_ltsv)
   end
 end
