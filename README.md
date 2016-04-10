@@ -182,7 +182,7 @@ It contains three configurations, and each of them consists of parameters in the
 |Available criteria                      |Note                                                                                      |
 |----------------------------------------|------------------------------------------------------------------------------------------|
 |:access_by_bots?                        |Access by major web crawlers such as Googlebot or Bingbot.                                |
-|:access_to_image?                       |The value of "%U%q" matches /\.(?:jpe?g|png|gif|ico|tiff?|bmp|svgz?|webp)$/in             |
+|:access_to_image?                       |The value of "%U%q" matches /\.(?:jpe?g\|png\|gif\|ico\|tiff?\|bmp\|svgz?\|webp)$/in             |
 |:referred_from_resources?               |The path part of the value of "%{Referer}i" matches any of the values of "resources".     |
 |:referred_from_under_resources?         |The path part of the value of "%{Referer}i" begins with any of the values of "resources". |
 |:access_to_resources?                   |The value of "%U%q" matches any of the values of "resources".                             |
