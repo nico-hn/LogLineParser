@@ -21,8 +21,11 @@ module LogLineParser
     TAIL_SLASH_RE = /\/$/
     SLASH = '/'
 
+    IMAGE_FILE_RE = /\.(?:jpe?g|png|gif|ico|tiff?|bmp|svgz?|webp)$/in
+
     ALLOWABLE_METHODS = [
       :access_by_bots?,
+      :access_to_image?,
       :referred_from_resources?,
       :referred_from_under_resources?,
       :access_to_resources?,
@@ -57,6 +60,10 @@ module LogLineParser
 
     def self.access_by_bots?(record, bots_re=Bots::DEFAULT_RE)
       bots_re =~ record.user_agent
+    end
+
+    def self.access_to_image?(record)
+      IMAGE_FILE_RE =~ record.resource
     end
 
     ##
@@ -175,6 +182,10 @@ module LogLineParser
 
     def access_by_bots?(record)
       @bots_re =~ record.user_agent
+    end
+
+    def access_to_image?(record)
+      IMAGE_FILE_RE =~ record.resource
     end
 
     ##

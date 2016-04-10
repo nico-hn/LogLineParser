@@ -13,6 +13,7 @@ class TestLogLineParserQuery < Minitest::Test
     @log_line4 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org/subdir/" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line5 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/index.html HTTP/1.1" 200 432 "http://www.example.org/subdir/example.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @log_line6 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /subdir/non-existent.html HTTP/1.1" 404 432 "http://www.example.org/subdir/example.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
+    @log_line7 = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /img/example.jpg HTTP/1.1" 404 432 "http://www.example.org/subdir/example.html" "Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0"'
     @googlebot = '192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] "GET /index.html HTTP/1.1" 200 432 "http://www.example.org" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"'
   end
 
@@ -106,6 +107,21 @@ class TestLogLineParserQuery < Minitest::Test
     normal_record = CombinedLogParser.parse(@log_line)
     assert(Query.access_by_bots?(bot_record))
     assert_nil(Query.access_by_bots?(normal_record))
+  end
+
+  def test_access_to_image?
+    image_record = LogLineParser::CombinedLogParser.parse(@log_line7)
+    non_image_record = LogLineParser::CombinedLogParser.parse(@log_line6)
+    query = Query.new(domain: "www.example.org", resources: ["/subdir/non-existent.html"])
+    assert(query.access_to_image?(image_record))
+    assert_nil(query.access_to_image?(non_image_record))
+  end
+
+  def test_query_access_to_image?
+    image_record = LogLineParser::CombinedLogParser.parse(@log_line7)
+    non_image_record = LogLineParser::CombinedLogParser.parse(@log_line6)
+    assert(Query.access_to_image?(image_record))
+    assert_nil(Query.access_to_image?(non_image_record))
   end
 
   def test_query_referred_from_resources?
