@@ -63,7 +63,7 @@ Three parsers are predefined for such cases:
 <dt>LogLineParser::CommonLogWithVHParser</dt>
 <dd>For Common Log Format with Virtual Host</dd>
 <dt>LogLineParser::CombinedLogParser</dt>
-<dd>NCSA extended/combined log format</dd>
+<dd>For NCSA extended/combined log format</dd>
 </dl>
 
 #### Defining a parser
