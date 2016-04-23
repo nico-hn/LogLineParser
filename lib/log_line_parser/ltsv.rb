@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 module LogLineParser
-
   module Ltsv
     LABEL_SEPARATOR = ":"
     TAB = "\t"
