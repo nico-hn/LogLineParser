@@ -23,9 +23,7 @@ module LogLineParser
       end
       yield logs
     ensure
-      logs.each do |k, v|
-        v.close
-      end
+      logs.each_value {|v| v.close }
     end
 
     def self.read_configs(config)
