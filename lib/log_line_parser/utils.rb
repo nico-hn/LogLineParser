@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'log_line_parser'
-require 'log_line_parser/query'
 require 'csv'
 require 'yaml'
 
