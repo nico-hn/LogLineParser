@@ -7,9 +7,13 @@ module LineParser
 
       def tokenize(str, tokens=[])
         @scanner.string = str
-        token = true # to start looping, you should assign a truthy value
-        while token
-          tokens.push token if token = scan_token
+        cur_pos = @scanner.charpos
+        while chunk_length = @scanner.skip_until(@special_token_re)
+          token = @scanner.matched
+          non_token_length = chunk_length - token.length
+          tokens.push str[cur_pos, non_token_length] if non_token_length > 0
+          tokens.push token
+          cur_pos += chunk_length
         end
 
         tokens.push @scanner.rest unless @scanner.eos?
