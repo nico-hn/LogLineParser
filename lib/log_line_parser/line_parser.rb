@@ -3,7 +3,7 @@
 module LineParser
   class Tokenizer
     class << self
-      attr_reader :special_token_re, :non_special_token_re
+      attr_reader :special_token_re
 
       def tokenize(str, tokens=[])
         @scanner.string = str
@@ -24,7 +24,7 @@ module LineParser
         @special_tokens = special_tokens
         @unescaped_special_tokens = unescaped_special_tokens
         @scanner = StringScanner.new("".freeze)
-        @special_token_re, @non_special_token_re = compose_re(@special_tokens)
+        @special_token_re = compose_re(@special_tokens)
       end
 
       private
@@ -38,7 +38,7 @@ module LineParser
 
       def compose_re(special_tokens)
         tokens_str = compose_special_tokens_str(special_tokens)
-        return Regexp.compile(tokens_str), Regexp.compile("(?=#{tokens_str})")
+        return Regexp.compile(tokens_str)
       end
     end
   end
