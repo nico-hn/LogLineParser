@@ -108,4 +108,15 @@ expected_result = [
                                               open("test/data/example_combined_log.log"))
     assert_equal(expected_tsv, output.string)
   end
+
+  def test_execute_as_converter_to_ltsv
+    setup_argv("--to=ltsv")
+    opts = CommandLineInterface.parse_options
+    output = StringIO.new(String.new, "w")
+    expected_tsv = File.read("test/data/expected_combined_log.ltsv")
+    CommandLineInterface.execute_as_converter(opts,
+                                              output,
+                                              open("test/data/example_combined_log.log"))
+    assert_equal(expected_tsv, output.string)
+  end
 end

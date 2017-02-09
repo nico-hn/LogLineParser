@@ -1,0 +1,4 @@
+host:192.168.3.4	ident:-	user:quidam	time:07/Feb/2016:07:39:42 +0900	req:GET /index.html HTTP/1.1	status:200	size:432	referer:http://www.example.org/start.html	ua:Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0
+host:192.168.3.4	ident:-	user:quidam	time:07/Feb/2016:07:39:42 +0900	req:GET /index.html HTTP/1.1	status:200	size:432	referer:http://www.example.org/	ua:Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0
+host:192.168.3.4	ident:-	user:quidam	time:07/Feb/2016:07:39:42 +0900	req:GET /subdir/index.html HTTP/1.1	status:200	size:432	referer:http://www.example.org	ua:Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0
+host:192.168.3.4	ident:-	user:quidam	time:07/Feb/2016:07:39:42 +0900	req:GET /subdir/index.html HTTP/1.1	status:200	size:432	referer:http://www.example.org/subdir/	ua:Mozilla/5.0 (X11; U; Linux i686; ja-JP; rv:1.7.5) Gecko/20041108 Firefox/1.0
