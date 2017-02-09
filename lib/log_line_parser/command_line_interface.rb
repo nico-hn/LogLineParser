@@ -11,6 +11,21 @@ module LogLineParser
     class UnsupportedFormatError < StandardError; end
 
     class Converter
+      def execute(options, output=STDOUT, input=ARGF)
+        output_format = options[:format] || DEFAULT_FORMAT
+        case output_format
+        when DEFAULT_FORMAT
+          to_csv(input, output)
+        when "tsv"
+          to_tsv(input, output)
+        when "ltsv"
+          to_ltsv(input, output,
+                  CommandLineInterface.choose_log_parser(options[:log_format]))
+        else
+          raise UnsupportedFormatError.new(output_format)
+        end
+      end
+
       def to_csv(input, output)
         input.each_line do |line|
           output.print Utils.to_csv(line.chomp)
@@ -112,19 +127,7 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
     end
 
     def self.execute_as_converter(options, output=STDOUT, input=ARGF)
-      output_format = options[:format] || DEFAULT_FORMAT
-      converter = Converter.new
-      case output_format
-      when DEFAULT_FORMAT
-        converter.to_csv(input, output)
-      when "tsv"
-        converter.to_tsv(input, output)
-      when "ltsv"
-        converter.to_ltsv(input, output,
-                        choose_log_parser(options[:log_format]))
-      else
-        raise UnsupportedFormatError.new(output_format)
-      end
+      Converter.new.execute(options, output, input)
     end
 
     # private class methods
