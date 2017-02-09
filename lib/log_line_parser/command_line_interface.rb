@@ -10,6 +10,26 @@ module LogLineParser
   module CommandLineInterface
     class UnsupportedFormatError < StandardError; end
 
+    class Converter
+      def convert_to_csv(input, output)
+        input.each_line do |line|
+          output.print Utils.to_csv(line.chomp)
+        end
+      end
+
+      def convert_to_tsv(input, output)
+        input.each_line do |line|
+          output.puts Utils.to_tsv(line.chomp)
+        end
+      end
+
+      def convert_to_ltsv(input, output, parser)
+        input.each_line do |line|
+          output.puts parser.to_ltsv(line.chomp)
+        end
+      end
+    end
+
     DEFAULT_FORMAT = "csv"
 
     def self.parse_options
