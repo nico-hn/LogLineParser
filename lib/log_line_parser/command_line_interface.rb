@@ -163,25 +163,10 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
       end
     end
 
-    def self.convert_to_csv(input, output)
-      Converter.new.to_csv(input, output)
-    end
-
-    def self.convert_to_tsv(input, output)
-      Converter.new.to_tsv(input, output)
-    end
-
-    def self.convert_to_ltsv(input, output, parser)
-      Converter.new.to_ltsv(input, output, parser)
-    end
-
     private_class_method(:predefined_options_for_log_format,
                          :compile_bots_re_from_config_file,
                          :collect_output_log_names,
                          :execute_queries,
-                         :setup_queries_from_configs,
-                         :convert_to_csv,
-                         :convert_to_tsv,
-                         :convert_to_ltsv)
+                         :setup_queries_from_configs)
   end
 end
