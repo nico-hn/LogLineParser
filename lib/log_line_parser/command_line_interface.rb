@@ -163,21 +163,15 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
     end
 
     def self.convert_to_csv(input, output)
-      input.each_line do |line|
-        output.print Utils.to_csv(line.chomp)
-      end
+      Converter.new.convert_to_csv(input, output)
     end
 
     def self.convert_to_tsv(input, output)
-      input.each_line do |line|
-        output.puts Utils.to_tsv(line.chomp)
-      end
+      Converter.new.convert_to_tsv(input, output)
     end
 
     def self.convert_to_ltsv(input, output, parser)
-      input.each_line do |line|
-        output.puts parser.to_ltsv(line.chomp)
-      end
+      Converter.new.convert_to_ltsv(input, output, parser)
     end
 
     private_class_method(:predefined_options_for_log_format,
