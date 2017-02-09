@@ -113,13 +113,14 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
 
     def self.execute_as_converter(options, output=STDOUT, input=ARGF)
       output_format = options[:format] || DEFAULT_FORMAT
+      converter = Converter.new
       case output_format
       when DEFAULT_FORMAT
-        convert_to_csv(input, output)
+        converter.to_csv(input, output)
       when "tsv"
-        convert_to_tsv(input, output)
+        converter.to_tsv(input, output)
       when "ltsv"
-        convert_to_ltsv(input, output,
+        converter.to_ltsv(input, output,
                         choose_log_parser(options[:log_format]))
       else
         raise UnsupportedFormatError.new(output_format)
