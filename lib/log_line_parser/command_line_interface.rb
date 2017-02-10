@@ -19,8 +19,7 @@ module LogLineParser
         when "tsv"
           to_tsv(input, output)
         when "ltsv"
-          to_ltsv(input, output,
-                  CommandLineInterface.choose_log_parser(options[:log_format]))
+          to_ltsv(input, output, options[:log_format])
         else
           raise UnsupportedFormatError.new(output_format)
         end
@@ -48,7 +47,7 @@ module LogLineParser
     DEFAULT_FORMAT = "csv"
 
     def self.parse_options
-      options = {}
+      options = { log_format: LogLineParser::CombinedLogParser }
 
       OptionParser.new("USAGE: #{File.basename($0)} [OPTION]... [LOG_FILE]...") do |opt|
         opt.on("-c [config_file]", "--config [=config_file]",
@@ -75,7 +74,7 @@ Default bots: #{Bots::DEFAULT_BOTS.join(', ')}") do |config_file|
         opt.on("-l [LogFormat]", "--log-format [=LogFormat]",
                "Specify LogFormat by giving a LogFormat or one of \
 formats predefined as #{predefined_options_for_log_format}") do |log_format|
-          options[:log_format] = log_format
+          options[:log_format] = choose_log_parser(log_format)
         end
 
         opt.on("-o [output_dir]", "--output-dir [=output_dir]",
@@ -95,7 +94,6 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
     end
 
     def self.choose_log_parser(log_format)
-      return LogLineParser::CombinedLogParser unless log_format
       parser = LogLineParser::PREDEFINED_FORMATS[log_format]
       parser || LogLineParser.parser(log_format)
     end
@@ -113,14 +111,14 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
 
     def self.show_settings(options)
       bots_re = compile_bots_re_from_config_file(options[:bots_config_file])
-      parser = choose_log_parser(options[:log_format])
+      parser = options[:log_format]
       puts "The regular expression for bots: #{bots_re}"
       puts "LogFormat: #{parser.format_strings}"
     end
 
     def self.execute_as_filter(options)
       configs = Utils.load_config_file(options[:config_file])
-      parser = choose_log_parser(options[:log_format])
+      parser = options[:log_format]
       output_dir = options[:output_dir]
       bots_re = compile_bots_re_from_config_file(options[:bots_config_file])
       execute_queries(configs, parser, output_dir, bots_re)

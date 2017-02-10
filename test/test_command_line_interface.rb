@@ -49,30 +49,27 @@ expected_result = [
   def test_parse_options
     setup_argv("--config=config.yaml")
     opts = CommandLineInterface.parse_options
-    expected_result =  { :config_file => "config.yaml" }
+    expected_result =  { log_format: LogLineParser::CombinedLogParser, config_file: "config.yaml" }
     assert_equal(expected_result, opts)
 
     setup_argv("--to=csv")
     opts = CommandLineInterface.parse_options
-    expected_result =  { :format => "csv" }
+    expected_result =  { log_format: LogLineParser::CombinedLogParser, format: "csv" }
     assert_equal(expected_result, opts)
   end
 
   def test_choose_log_parser
     setup_argv("--log-format=common")
     opts = CommandLineInterface.parse_options
-    parser = CommandLineInterface.choose_log_parser(opts[:log_format])
-    assert_equal(CommonLogParser, parser)
+    assert_equal(CommonLogParser, opts[:log_format])
 
     setup_argv("--to=csv")
     opts = CommandLineInterface.parse_options
-    parser = CommandLineInterface.choose_log_parser(opts[:log_format])
-    assert_equal(CombinedLogParser, parser)
+    assert_equal(CombinedLogParser, opts[:log_format])
 
     setup_argv("--log-format=common_with_vh")
     opts = CommandLineInterface.parse_options
-    parser = CommandLineInterface.choose_log_parser(opts[:log_format])
-    assert_equal(CommonLogWithVHParser, parser)
+    assert_equal(CommonLogWithVHParser, opts[:log_format])
   end
 
   def test_compile_bots_re_from_config_file
