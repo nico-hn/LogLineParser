@@ -117,11 +117,7 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
     end
 
     def self.execute_as_filter(options)
-      configs = Utils.load_config_file(options[:config_file])
-      parser = options[:log_format]
-      output_dir = options[:output_dir]
-      bots_re = compile_bots_re_from_config_file(options[:bots_config_file])
-      execute_queries(configs, parser, output_dir, bots_re)
+      execute_queries(options)
     end
 
     def self.execute_as_converter(options, output=STDOUT, input=ARGF)
@@ -148,7 +144,11 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
       end
     end
 
-    def self.execute_queries(configs, parser, output_dir, bots_re)
+    def self.execute_queries(options)
+      configs = Utils.load_config_file(options[:config_file])
+      parser = options[:log_format]
+      output_dir = options[:output_dir]
+      bots_re = compile_bots_re_from_config_file(options[:bots_config_file])
       output_log_names = collect_output_log_names(configs)
       Utils.open_multiple_output_files(output_log_names, output_dir) do |logs|
         queries = setup_queries_from_configs(configs, logs, bots_re)
