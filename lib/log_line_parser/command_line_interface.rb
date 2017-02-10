@@ -146,13 +146,12 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
 
     def self.execute_queries(options)
       configs = Utils.load_config_file(options[:config_file])
-      parser = options[:log_format]
-      output_dir = options[:output_dir]
       bots_re = compile_bots_re_from_config_file(options[:bots_config_file])
       output_log_names = collect_output_log_names(configs)
-      Utils.open_multiple_output_files(output_log_names, output_dir) do |logs|
+      Utils.open_multiple_output_files(output_log_names,
+                                       options[:output_dir]) do |logs|
         queries = setup_queries_from_configs(configs, logs, bots_re)
-        LogLineParser.each_record(parser: parser) do |line, record|
+        LogLineParser.each_record(parser: options[:log_format]) do |line, record|
           queries.each {|query| query.call(line, record) }
         end
       end
