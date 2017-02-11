@@ -12,3 +12,4 @@
 \#*\#
 /*.gem
 /*.zip
+/test/data/tmp/
