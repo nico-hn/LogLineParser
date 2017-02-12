@@ -4,6 +4,7 @@ require 'minitest_helper'
 require 'log_line_parser/command_line_interface'
 require 'shellwords'
 require 'stringio'
+require 'fileutils'
 
 def setup_argv(command_lin_str)
   ARGV.replace Shellwords.split(command_lin_str)
@@ -115,5 +116,34 @@ expected_result = [
                                               output,
                                               open("test/data/example_combined_log.log"))
     assert_equal(expected_tsv, output.string)
+  end
+
+  def test_execute_as_filter
+    tmp_dir = "test/data/tmp"
+    result_log_names = %w(start_or_subidir-index.log to_and_from_index.log)
+    delete_files(result_log_names, tmp_dir)
+    expected_outputs = read_files(result_log_names, "test/data/filter_mode_results")
+    setup_argv("--filter-mode -o #{tmp_dir} -c test/data/example_config.yaml test/data/example_combined_log.log")
+    opts = CommandLineInterface.parse_options
+    CommandLineInterface.execute_as_filter(opts)
+    results = read_files(result_log_names, tmp_dir)
+    assert_equal(expected_outputs, results)
+  ensure
+    delete_files(result_log_names, tmp_dir)
+  end
+
+  private
+
+  def read_files(filenames, path)
+    filenames.map do |file|
+      File.read(File.join(path, file))
+    end
+  end
+
+  def delete_files(names, path)
+    names.each do |name|
+      file = File.join(path, name)
+      FileUtils.rm(file) if File.exist? file
+    end
   end
 end
