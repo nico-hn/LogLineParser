@@ -36,6 +36,12 @@ module LogLineParser
       end
     end
 
+    def self.compile_bots_re_from_config_file(bots_config_file)
+      return Bots::DEFAULT_RE unless bots_config_file
+      configs = load_config_file(bots_config_file)[0]
+      Bots.compile_bots_re(configs)
+    end
+
     def self.to_tsv(line, escape=true)
       LogLineParser.parse(line).to_a.map do |field|
         escape ? escape_special_chars(field) : field

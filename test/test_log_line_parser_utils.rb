@@ -47,4 +47,16 @@ class TestLogLineParserUtils < Minitest::Test
     csv = Utils.to_csv(@log_line)
     assert_equal(@log_line_csv, csv)
   end
+
+  def test_compile_bots_re_from_config_file
+    bots_re = Utils.compile_bots_re_from_config_file("test/data/example_bots.yaml")
+    default_bots_re = Utils.compile_bots_re_from_config_file(nil)
+    bots_only_re = Utils.compile_bots_re_from_config_file("test/data/example_bots_re.yaml")
+    expected_bots_re = /(?i-mx:Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot|Applebot)|(?-mix: bot$)/
+    expected_default_bots_re = /Googlebot|Googlebot\-Mobile|Mediapartners\-Google|Bingbot|Slurp|Baiduspider|BaiduImagespider|BaiduMobaider|YetiBot|Applebot/in
+    expected_bots_only_re = / bot$/n
+    assert_equal(expected_bots_re, bots_re)
+    assert_equal(expected_default_bots_re, default_bots_re)
+    assert_equal(expected_bots_only_re, bots_only_re)
+  end
 end
