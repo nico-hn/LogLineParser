@@ -63,7 +63,7 @@ module LogLineParser
 
       def option_values(options)
         configs = Utils.load_config_file(options[:config_file])
-        bots_re = CommandLineInterface.compile_bots_re_from_config_file(options[:bots_config_file])
+        bots_re = Utils.compile_bots_re_from_config_file(options[:bots_config_file])
         OptionValues.new(configs,
                          bots_re,
                          collect_output_log_names(configs),
@@ -150,7 +150,7 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
     end
 
     def self.show_settings(options)
-      bots_re = compile_bots_re_from_config_file(options[:bots_config_file])
+      bots_re = Utils.compile_bots_re_from_config_file(options[:bots_config_file])
       parser = options[:log_format]
       puts "The regular expression for bots: #{bots_re}"
       puts "LogFormat: #{parser.format_strings}"
@@ -170,10 +170,6 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
       PREDEFINED_FORMATS.keys.
         map {|opt| "\"#{opt}\"" }.
         join(", ")
-    end
-
-    def self.compile_bots_re_from_config_file(bots_config_file)
-      Utils.compile_bots_re_from_config_file(bots_config_file)
     end
 
     private_class_method :predefined_options_for_log_format
