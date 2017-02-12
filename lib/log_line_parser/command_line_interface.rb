@@ -45,20 +45,31 @@ module LogLineParser
     end
 
     class Filter
+      OptionValues = Struct.new(:configs, :bots_re, :output_log_names,
+                                :output_dir, :log_format)
+
       def execute_queries(options)
-        configs = Utils.load_config_file(options[:config_file])
-        bots_re = CommandLineInterface.compile_bots_re_from_config_file(options[:bots_config_file])
-        output_log_names = collect_output_log_names(configs)
-        Utils.open_multiple_output_files(output_log_names,
-                                         options[:output_dir]) do |logs|
-          queries = setup_queries_from_configs(configs, logs, bots_re)
-          LogLineParser.each_record(parser: options[:log_format]) do |line, record|
+        opt = option_values(options)
+        Utils.open_multiple_output_files(opt.output_log_names,
+                                         opt.output_dir) do |logs|
+          queries = setup_queries_from_configs(opt.configs, logs, opt.bots_re)
+          LogLineParser.each_record(parser: opt.log_format) do |line, record|
             queries.each {|query| query.call(line, record) }
           end
         end
       end
 
       private
+
+      def option_values(options)
+        configs = Utils.load_config_file(options[:config_file])
+        bots_re = CommandLineInterface.compile_bots_re_from_config_file(options[:bots_config_file])
+        OptionValues.new(configs,
+                         bots_re,
+                         collect_output_log_names(configs),
+                         options[:output_dir],
+                         options[:log_format])
+      end
 
       def collect_output_log_names(configs)
         configs.map do |config|
