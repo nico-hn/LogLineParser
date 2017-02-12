@@ -48,7 +48,7 @@ module LogLineParser
       OptionValues = Struct.new(:configs, :bots_re, :output_log_names,
                                 :output_dir, :log_format)
 
-      def execute_queries(options)
+      def execute(options)
         opt = option_values(options)
         Utils.open_multiple_output_files(opt.output_log_names,
                                          opt.output_dir) do |logs|
@@ -157,7 +157,7 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
     end
 
     def self.execute_as_filter(options)
-      Filter.new.execute_queries(options)
+      Filter.new.execute(options)
     end
 
     def self.execute_as_converter(options, output=STDOUT, input=ARGF)
