@@ -126,7 +126,7 @@ expected_result = [
     error_log_path = File.join(tmp_dir, result_log_names[2])
     input_logs = %w(example_combined example_malformed).map {|log| "test/data/#{log}_log.log" }.join(" ")
     delete_files(result_log_names, tmp_dir)
-    expected_output = "192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] \"GET /index.html HTTP/1.1\" 200 432\n"
+    expected_output = "test/data/example_malformed_log.log:3:192.168.3.4 - quidam [07/Feb/2016:07:39:42 +0900] \"GET /index.html HTTP/1.1\" 200 432\n"
     setup_argv("--filter-mode -o #{tmp_dir} -c test/data/example_config.yaml -e #{error_log_path} #{input_logs}")
     opts = CommandLineInterface.parse_options
     CommandLineInterface.execute_as_filter(opts)

@@ -268,8 +268,18 @@ module LogLineParser
       begin
         yield line, parser.parse(line)
       rescue MalFormedRecordError => e
-        error_output.print e.message
+        error_output.print error_message(input, e)
       end
     end
   end
+
+  def self.error_message(input, e)
+    if input == ARGF
+      "#{ARGF.filename}:#{ARGF.file.lineno}:#{e.message}"
+    else
+      e.message
+    end
+  end
+
+  private_class_method :error_message
 end
