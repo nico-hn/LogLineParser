@@ -46,17 +46,20 @@ module LogLineParser
 
     class Filter
       OptionValues = Struct.new(:configs, :bots_re, :output_log_names,
-                                :output_dir, :log_format)
+                                :output_dir, :log_format, :error_log)
 
       def execute(options)
         opt = option_values(options)
         Utils.open_multiple_output_files(opt.output_log_names,
                                          opt.output_dir) do |logs|
           queries = setup_queries_from_configs(opt.configs, logs, opt.bots_re)
-          LogLineParser.each_record(parser: opt.log_format) do |line, record|
+          LogLineParser.each_record(error_output: opt.error_log || STDERR,
+                                    parser: opt.log_format) do |line, record|
             queries.each {|query| query.call(line, record) }
           end
         end
+      ensure
+        opt.error_log.close if opt.error_log
       end
 
       private
@@ -64,11 +67,13 @@ module LogLineParser
       def option_values(options)
         configs = Utils.load_config_file(options[:config_file])
         bots_re = Utils.compile_bots_re_from_config_file(options[:bots_config_file])
+        error_log = open_error_log(options[:error_log_file])
         OptionValues.new(configs,
                          bots_re,
                          collect_output_log_names(configs),
                          options[:output_dir],
-                         options[:log_format])
+                         options[:log_format],
+                         error_log)
       end
 
       def collect_output_log_names(configs)
@@ -81,6 +86,10 @@ module LogLineParser
         configs.map do |config|
           Query.register_query_to_log(config, logs, bots_re)
         end
+      end
+
+      def open_error_log(log_file)
+        open(File.expand_path(log_file), "wb") if log_file
       end
     end
 
@@ -125,6 +134,11 @@ formats predefined as #{predefined_options_for_log_format}") do |log_format|
         opt.on("-t [format]", "--to [=format]",
                "Specify a format: csv, tsv or ltsv") do |format|
           options[:format] = format
+        end
+
+        opt.on("-e [error_log_file]", "--error-log [=error_log_file]",
+               "Specify a file for error logging") do |error_log_file|
+          options[:error_log_file] = error_log_file
         end
 
         opt.parse!
