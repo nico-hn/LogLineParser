@@ -1,7 +1,7 @@
 # LogLineParser
 
-LogLineParser is a simple parser of Apache access logs. It parses a line of Apache access log and turns it into an array of strings or a Hash object.
-And from the command line, you can use it as a conversion tool of file formats or as a filtering tool of access records.
+LogLineParser is a simple parser of Apache access log. It parses a line of Apache access log and turns it into an array of strings or a Hash object.
+And from the command line, you can use it as a conversion tool of file format (to CSV or TSV) or as a filtering tool of access records.
 
 ## Installation
 
