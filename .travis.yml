@@ -1,5 +1,12 @@
 language: ruby
 rvm:
-  - 2.1.6
   - 2.2.0
-  - jruby
+  - 2.3.3
+  - 2.4.0
+  - jruby-9.1.8.0
+sudo: required
+dist: trusty
+addons:
+  apt:
+    packages:
+      - haveged
