@@ -7,7 +7,7 @@ module LineParser
 
       def tokenize(str, tokens=[])
         @scanner.string = str
-        cur_pos = 0 # in stead of @scanner.pos
+        cur_pos = 0 # instead of @scanner.pos
         while chunk_size = @scanner.skip_until(@special_token_re)
           token = @scanner.matched
           pre_match_size = chunk_size - token.bytesize
