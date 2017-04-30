@@ -19,6 +19,21 @@ Or install it yourself as:
 
     $ gem install log_line_parser
 
+### If you have millions of records to be parsed
+
+I recommend you to use [JRuby](http://jruby.org/) (version >= 9.1.8), because it is significantly faster than MRI.
+
+When you use JRuby, you have to set RUBYOPT environment variable at first. For example:
+
+    # For Bash or Zsh
+    $ RUBYOPT='-Xcompile.invokedynamic=true'
+    $ export RUBYOPT
+
+Or
+
+    # For MS Windows
+    set RUBYOPT=-Xcompile.invokedynamic=true
+
 ## Usage
 
 ### As a converter
