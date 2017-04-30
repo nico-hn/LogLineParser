@@ -249,6 +249,21 @@ The values given by the configuration file are compiled into a regular expressio
 
     $ log_line_parser --show-current-settings --bots-config=bots_config.yml
 
+#### Command line options
+
+The following command options are available.
+
+|Short                 |Long                              |Description                                                                                                           |
+|----------------------|----------------------------------|----------------------------------------------------------------------------------------------------------------------|
+|-c [config_file]      |--config [=config_file]           |Give a configuration file in yaml format                                                                              |
+|-b [bots_config_file] |--bots-config [=bots_config_file] |Give a configuration file in yaml format. Default bots: Googlebot, Googlebot-Mobile, Mediapartners-Google, Bingbot, Slurp, Baiduspider, BaiduImagespider, BaiduMobaider, YetiBot, Applebot |
+|-s                    |--show-current-settings           |Show the detail of the current settings                                                                               |
+|-f                    |--filter-mode                     |Mode for choosing log records that satisfy certain criteria                                                           |
+|-l [LogFormat]        |--log-format [=LogFormat]         |Specify LogFormat by giving a LogFormat or one of formats predefined as "common", "common_with_vh", "combined", "moe" |
+|-o [output_dir]       |--output-dir [=output_dir]        |Specify the output directory for log files                                                                            |
+|-t [format]           |--to [=format]                    |Specify a format: csv, tsv or ltsv                                                                                    |
+|-e [error_log_file]   |--error-log [=error_log_file]     |Specify a file for error logging                                                                                      |
+
 
 ## Development
 
