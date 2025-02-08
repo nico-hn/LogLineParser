@@ -41,12 +41,12 @@ Applebot
       end
       return if bot_names.empty?
       escaped_bots_str = bot_names.map {|name| Regexp.escape(name) }.join("|")
-      Regexp.compile(escaped_bots_str, Regexp::IGNORECASE, "n")
+      Regexp.compile(escaped_bots_str, Regexp::IGNORECASE)
     end
 
     def self.compile_re(bots_config)
       bots_pats = bots_config[ConfigLabels::BOTS_RE]
-      Regexp.compile(bots_pats.join("|"), nil, "n") if bots_pats
+      Regexp.compile(bots_pats.join("|"), nil) if bots_pats
     end
 
     private_class_method :compile_escaped_re, :compile_re
