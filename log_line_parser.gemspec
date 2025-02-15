@@ -31,4 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", ">= 2.4"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "minitest"
+  spec.add_development_dependency "rubocop", ">= 1.57"
 end
