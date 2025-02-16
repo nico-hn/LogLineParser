@@ -23,12 +23,13 @@ Gem::Specification.new do |spec|
   #    raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
   #  end
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features|tools)/}) }
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", ">= 1.7"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "bundler", ">= 2.4"
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "minitest"
+  spec.add_development_dependency "rubocop", ">= 1.57"
 end

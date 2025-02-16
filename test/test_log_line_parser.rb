@@ -109,7 +109,7 @@ class TestLogLineParser < Minitest::Test
     double_quote = '"a string that begins with a double quote'
     should_not_be_escaped = "a string"
     assert_equal('"', escape_node.part_to_be_escaped(double_quote))
-    assert_equal(nil, escape_node.part_to_be_escaped(should_not_be_escaped))
+    assert_nil(escape_node.part_to_be_escaped(should_not_be_escaped))
   end
 
   def test_log_line_node_stack_to_a
